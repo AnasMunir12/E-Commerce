@@ -44,12 +44,13 @@ export default function Banner() {
 <Box sx={{ width: "80%",height:"350px", margin: "auto", mt: 4, background:"white" }} >
 <Slider {...settings}>
 {Banners.map((banner , index) => (
-    <Box display={"flex"} flexDirection={"row"}>
+    <Box display={"flex"}  sx={{background:"black"}}>
         <Box 
         key={index}
         display={"flex"}
         flexDirection={"row"}
         alignItems={"center"}
+        sx={{color:'white'}}
         > 
             <IconButton>{banner.icon}</IconButton>
             <Typography>{banner.name}</Typography>
