@@ -1,0 +1,69 @@
+html {
+    scroll-behavior: smooth;
+}
+
+/* Root Variables */
+:root {
+    /* Fonts */
+    --font-family-primary: "Trebuchet MS", sans-serif;
+    --font-family-secondary: "Arial", sans-serif;
+    --font-family-tertiary: "Times New Roman", serif;
+    --family-primary: serif; /* Fixed extra space in value */
+
+    --font-xs: 12px;
+    --font-sm: 16px;
+    --font-md: 20px;
+    --font-standard: 24px;
+    --font-lg: 30px;
+    --font-xl: 40px;
+    --font-2xl: 60px;
+
+    --heading: 34px;
+    --description: 16px;
+
+    --font-light: 300;
+    --font-regular: 400;
+    --font-medium: 600;
+    --font-bold: 700;
+
+    /* Colors */
+    --color-primary: #007bff; /* Overriding the previous blue */
+    --color-primary-hover: #1e90ff;
+    --color-primary-light: rgb(209, 229, 249);
+    --color-secondary: #444;
+    --color-success: #28A745;
+    --color-danger: #DC3545;
+    --color-warning: #FFC107;
+    --color-info: #17A2B8;
+    --color-light: #F8F9FA;
+    --color-dark: #343A40;
+
+    --success-dark: green;
+    --success: #28a745;
+    --success-light: #50C878;
+    --success-bg: #F4FFF4;
+
+    --secondary: #6c757d;
+    --tertiary: #f8f9fa;
+    --quaternary: #343a40;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --info: #17a2b8;
+    --light: #f8f9fa;
+    --dark: #343a40;
+    --white: #fff;
+    --black: #000;
+    --gray: #6c757d;
+    --gray-light: #f4f4f4;
+
+    /* Borders and Shadows */
+    --radius: 12px;
+    --rounded: 100px;
+}
+
+/* Global Body Styles */
+body {
+    font-family: var(--font-family-primary);
+    margin: 0;
+    padding: 0;
+}
