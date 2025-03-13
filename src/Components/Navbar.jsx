@@ -15,7 +15,7 @@ export default function Navbar() {
 
   return (
     <>
-      <Box width={"100%"} height={"20px"} p={3}>
+      <Box  height={"20px"} p={3}>
         <Box
           display={"flex"}
           alignItems={"center"}

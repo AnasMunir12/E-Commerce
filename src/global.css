@@ -32,7 +32,7 @@ html {
     --color-primary-light: rgb(209, 229, 249);
     --color-secondary: #444;
     --color-success: #28A745;
-    --color-danger: #DC3545;
+    --color-danger: #DB4444;
     --color-warning: #FFC107;
     --color-info: #17A2B8;
     --color-light: #F8F9FA;
@@ -66,4 +66,5 @@ body {
     font-family: var(--font-family-primary);
     margin: 0;
     padding: 0;
+    
 }
