@@ -1,7 +1,7 @@
 import Navbar from './Components/Navbar'
 import '../src/global.css'
 import Banner from './Components/Banner'
-import Container from './Components/Container'
+import FlashSales from './Components/FlashSales'
 
 function App() {
 
@@ -9,7 +9,7 @@ function App() {
     <>
      <Navbar/>
      <Banner/>
-     <Container/>
+     <FlashSales/>
     </>
   )
 }

@@ -41,7 +41,7 @@ html {
     --success-dark: green;
     --success: #28a745;
     --success-light: #50C878;
-    --success-bg: #F4FFF4;
+    --success-bg: #F5F5F5;
 
     --secondary: #6c757d;
     --tertiary: #f8f9fa;
@@ -55,6 +55,7 @@ html {
     --black: #000;
     --gray: #6c757d;
     --gray-light: #f4f4f4;
+    --text-color: #FAFAFA;
 
     /* Borders and Shadows */
     --radius: 12px;
