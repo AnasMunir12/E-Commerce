@@ -16,7 +16,7 @@ import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
 import { QRCode } from "react-qrcode-logo";
 
-import Facebookicon from "../images/FacebookIcon.png";
+import Facebookicon from "../images/facebookIcon.png";
 import InstaIcon from "../images/instagramIcon.png";
 import Linkdinicon from "../images/linkedinIcon.png";
 import Twitttericon from "../images/twitterIcon.png";
