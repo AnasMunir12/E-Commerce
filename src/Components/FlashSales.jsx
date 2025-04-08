@@ -1,32 +1,19 @@
-import React, {
-  useRef,
-  useEffect,
-  createContext,
-  useState,
-  useContext,
-} from "react";
-import { Box, Button, IconButton, Rating, Stack, Typography } from "@mui/material";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import React, { useState, useRef, useEffect } from "react";
+import Slider from "react-slick";
+import { IconButton, Stack, Typography, Box, Rating } from "@mui/material";
+  import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+  import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import styled from "styled-components";  
 
 
-
-import { Navigation } from "swiper/modules";
-
-import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
-import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 import Remote from "../images/xremote.png";
 import Keyboard from "../images/keyboard.png";
 import Lcd from "../images/LCD.png";
-
-// ✅ Correctly create Swiper context
-export const SwiperContext = createContext(null);
 
 // ⏳ Countdown Timer Component
 const CountdownTimer = ({ endDate }) => {
@@ -90,11 +77,64 @@ const CountdownTimer = ({ endDate }) => {
   );
 };
 
-// 🔥 Flash Sales Component
 export default function FlashSales() {
-  const swiperRef = useRef(null);
+  const sliderRef = useRef(null);
   const endDate = new Date();
   endDate.setDate(endDate.getDate() + 5); // Adds 5 days
+
+
+  
+  const settings = {
+    infinite: false,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    arrows:false,
+  };
+
+
+  const ProductCard = styled(Stack)`
+  background: var(--success-bg);
+  border-radius: 4px;
+  width: 250px;
+  height: 230px;
+  align-items: center;
+  transition: transform 0.3s ease-in-out;
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const IconButtonStyled = styled(IconButton)`
+  background: white;
+  border-radius: 15px;
+  padding: 3px;
+  transition: background 0.3s ease-in-out;
+
+  &:hover {
+    background: var(--color-danger);
+    color: white;
+  }
+`;
+
+// Styled rating component with animation
+const AnimatedRating = styled(Rating)`
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  & .MuiRating-iconFilled {
+    transition: transform 0.2s ease-in-out;
+  }
+
+  & .MuiRating-iconFilled:hover {
+    transform: scale(1.2);
+  }
+`;
 
   const FlashSalesData = [
     { img: Remote, name: "HAVIT HV-G92 Gamepad", price: 120, discount: "-40%" },
@@ -115,13 +155,14 @@ export default function FlashSales() {
     { img: Lcd, name: "IPS LCD Gaming Monitor", price: 370, discount: "-10%" },
   ];
 
-  const [rating, setRating] = useState(Array(FlashSalesData.length).fill(2));
-  const [hover, setHover] = useState(Array(FlashSalesData.length).fill(-1));
+  const [rating, setRating] = useState(Array(FlashSalesData.length).fill(3));
   const ratingLabels = ["Poor", "Fair", "Good", "Very Good", "Excellent"];
 
+
+
   return (
-    <SwiperContext.Provider value={swiperRef}>
-      {/* 🔹 Section Header */}
+    <>
+      {/* Section Header */}
       <Stack
         mt={"100px"}
         direction={"row"}
@@ -159,14 +200,12 @@ export default function FlashSales() {
             Flash Sales
           </Typography>
           <CountdownTimer endDate={endDate} />
+
         </Stack>
-        {/* 🔹 Swiper Navigation Buttons */}
+
+        {/* Navigation Buttons */}
         <Stack direction={"row"}>
-          <IconButton
-            onClick={() => swiperRef.current?.slidePrev()}
-            disableRipple
-            disableTouchRipple
-          >
+          <IconButton onClick={() => sliderRef.current.slickPrev()} disableRipple>
             <ArrowBackRoundedIcon
               sx={{
                 fontSize: "var(--font-md)",
@@ -177,10 +216,7 @@ export default function FlashSales() {
               }}
             />
           </IconButton>
-          <IconButton
-            onClick={() => swiperRef.current?.slideNext()}
-            disableRipple
-          >
+          <IconButton onClick={() => sliderRef.current.slickNext()} disableRipple>
             <ArrowForwardRoundedIcon
               sx={{
                 fontSize: "var(--font-md)",
@@ -194,17 +230,13 @@ export default function FlashSales() {
         </Stack>
       </Stack>
 
-      {/* 🔹 Swiper Section */}
-      <Swiper
-        modules={[Navigation]}
-        slidesPerView={4}
-        loop={false}
-        onSwiper={(swiper) => (swiperRef.current = swiper)}
-      >
+<Stack display={"flex"} justifyContent={"center"}  width={"96%"} mx={6} >
+      {/* Flash Sales Slider */}
+      <Slider ref={sliderRef} {...settings}  > 
         {FlashSalesData.map((Sale, index) => (
-          <SwiperSlide key={index}>
-            <Stack mx={6}>
-              {/* 🔹 Product Card */}
+            <Stack key={index} >
+              <ProductCard>
+              {/* Product Card */}
               <Stack
                 sx={{ background: "var(--success-bg)", borderRadius: "4px" }}
                 width={"250px"}
@@ -270,46 +302,46 @@ export default function FlashSales() {
                   />
                 </Stack>
               </Stack>
+              </ProductCard>
+              {/* Name and Price */}
               <Typography sx={{ fontWeight: 500, mt: 2 }}>
                 {Sale.name}
               </Typography>
               <Typography sx={{ color: "var(--color-danger)" }}>
                 ${Sale.price}
               </Typography>
-              <Box display={"flex"} gap={2} alignItems={"center"}>
-                <Rating
-                  name={`rating-${index}`}
-                  value={rating[index]}
-                  onChange={(e, newValue) => {
-                    const newRating = [...rating];
-                    newRating[index] = newValue;
-                    setRating(newRating);
-                  }}
-                />
-                <Typography>({ratingLabels[rating[index] - 1]})</Typography>
-              </Box>
+              <Box display={"flex"} gap={2} alignItems={"center"} >
+                 <AnimatedRating
+                   name={`rating-${index}`}
+                   value={rating[index]}
+                   onChange={(e, newValue) => {
+                     const newRating = [...rating];
+                     newRating[index] = newValue;
+                     setRating(newRating);
+                   }}
+                 />
+                {rating[index] > 0 &&  <Typography>({ratingLabels[rating[index] - 1]})</Typography> }
+               </Box>
+              
             </Stack>
-          </SwiperSlide>
         ))}
-      </Swiper>
+      </Slider>
+      </Stack>
+
       <Stack direction={"row"} justifyContent={"center"} mt={"20px"}> 
-            {/* <Button sx={{background:"var(--color-danger)", borderRadius:"4px", padding:"12px 42px 12px 42px", color:"var(--text-color)",fontWeight:500, fontSize:"var(--font-sm)" ,textTransform:"capitalize" }} >
-      View All Products
-      </Button> */}
       <StyledWrapper>
       <button>
         <span>View All Products</span>
       </button>
     </StyledWrapper>
-      </Stack>
-      <Stack sx={{border: "0.5px solid black", opacity:"30%", mt:5}} width={"80%"} mx={"auto"}></Stack>
-      <br />
- 
-    </SwiperContext.Provider>
+    </Stack>
 
+      <Stack sx={{border: "0.5px solid black", opacity:"20%", mt:6}} width={"80%"} mx={"auto"}></Stack>
 
+    </>
   );
 }
+
 
 
 const StyledWrapper = styled.div`
@@ -397,6 +429,4 @@ const StyledWrapper = styled.div`
     transform: translate(50%, 0) scale(1.1);
   }
 `;
-
-
 
