@@ -1,6 +1,13 @@
 import React, { useRef } from "react";
 import Slider from "react-slick";
-import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Stack,
+  Typography,
+  Grid,
+} from "@mui/material";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -34,33 +41,28 @@ export default function Banner() {
   ];
 
   return (
-    <Box margin={"auto"}>
+    <Box sx={{ background: "black", color: "white" }}>
       <Slider ref={ImageSlider} {...settings}>
         {Banners.map((banner, index) => (
           <>
-            <Stack
-              key={index}
-              height={"340px"}
-              width={"100%"}
-              direction={"column"}
-              justifyContent={"center"}
-              alignItems={"center"}
-              sx={{ background: "black", color: "white", p: 4 }}
-            >
-              {/* Content Section */}
-              <Stack
-                direction={"row"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                width={"100%"}
-              >
-                {/* Left Section */}
-                <Stack width={"30%"} spacing={2} alignItems="flex-start">
-                  <Stack
-                    direction={"row"}
+            <Box maxWidth={"1000px"} mx={"auto"}>
+              <Grid container spacing={2} mt={5}>
+                <Grid
+                  item
+                  xs={12}
+                  md={6}
+                  key={index}
+                  height={"340px"}
+                  width={"auto"}
+                  display={"flex"}
+                  direction={"column"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                >
+                  <Box
+                    display={"flex"}
+                    flexDirection={"row"}
                     alignItems={"center"}
-                    spacing={1}
-                    width="100%"
                   >
                     <IconButton sx={{ color: "white" }}>
                       {React.cloneElement(banner.icon, {
@@ -70,7 +72,7 @@ export default function Banner() {
                     <Typography sx={{ fontSize: "var(--font-sm)" }}>
                       {banner.name}
                     </Typography>
-                  </Stack>
+                  </Box>
                   <Typography
                     sx={{
                       fontSize: "var(--font-xl)",
@@ -80,7 +82,8 @@ export default function Banner() {
                   >
                     Up to 10% <br /> off Voucher
                   </Typography>
-                  <Stack direction={"row"} spacing={1}>
+                  <Box display={"flex"} alignItems={"center"} >
+                    {" "}
                     <Button
                       sx={{
                         color: "var(--success-bg)",
@@ -94,42 +97,78 @@ export default function Banner() {
                         sx={{ color: "white", fontSize: "var(--font-sm)" }}
                       />
                     </IconButton>
-                  </Stack>
-                </Stack>
+                  </Box>
+                </Grid>
 
                 {/* Right Section - Image */}
-                <Stack width={"400px"} height={"300px"}>
-                  <img
+                <Grid item xs={12} md={6}>
+                  <Box
+                    component="img"
                     src={banner.img}
                     alt={banner.name}
-                    style={{
-                      width: "100%",
-                      height: "100%",
+                    sx={{
+                      width: {
+                        xs: "100%",
+                        md: "80%",
+                        lg: "100%",
+                      },
+                      height: {
+                        xs: "100%",
+                        md: "80%",
+                        lg: "100%",
+                      },
                       objectFit: "cover",
                     }}
                   />
-                </Stack>
-              </Stack>
+                </Grid>
 
-              {/* Arrows  */}
-              <Stack direction={"row"} spacing={2} sx={{ mt: 2 } }>
-                <IconButton
-                  onClick={() => ImageSlider.current.slickPrev()}
-                  sx={{ color: "white" }}
-                >
-                  <ArrowBackRoundedIcon sx={{ fontSize:"var(--font-sm)"}} />
-                </IconButton>
-                <IconButton
-                  onClick={() => ImageSlider.current.slickNext()}
-                  sx={{ color: "white" }}
-                >
-                  <ArrowForwardRoundedIcon sx={{ fontSize:"var(--font-sm)"}} />
-                </IconButton>
-              </Stack>
-            </Stack>
+                {/* Arrows  */}
+
+                <Box mx={"auto"}>
+                  <IconButton
+                    onClick={() => ImageSlider.current.slickPrev()}
+                    sx={{ color: "white" }}
+                  >
+                    <ArrowBackRoundedIcon sx={{ fontSize: "var(--font-sm)" }} />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => ImageSlider.current.slickNext()}
+                    sx={{ color: "white" }}
+                  >
+                    <ArrowForwardRoundedIcon
+                      sx={{ fontSize: "var(--font-sm)" }}
+                    />
+                  </IconButton>
+                </Box>
+              </Grid>
+            </Box>
           </>
         ))}
       </Slider>
     </Box>
   );
 }
+
+// import React from 'react'
+// import { Box, Button, IconButton, Stack, Typography, Grid } from "@mui/material";
+
+// export default function Banner() {
+//   return (
+//    <Box bgcolor={"black"}>
+//      <Box maxWidth={"1000px"} mx={"auto"}>
+//       <Grid container spacing={2}  sx={{ bgcolor:"red", height:"50vh"}} >
+
+//         <Grid item  xs={12}  md={6}  >
+
+//           Box 1
+//         </Grid>
+//         <Grid item xs={12}  md={6}  >
+
+//           Box 2
+//         </Grid>
+
+//       </Grid>
+//     </Box>
+//    </Box>
+//   )
+// }

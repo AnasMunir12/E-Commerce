@@ -25,6 +25,8 @@ export default function Navbar() {
   const isSmall = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+
 
   const navLinks = [
     { name: "Home", path: "/" },
@@ -43,7 +45,7 @@ export default function Navbar() {
         <Box
           display={"flex"}
           alignItems={"center"}
-          justifyContent={"space-between"}
+          justifyContent={"space-evenly"}
         >
           <Typography sx={{ fontWeight: 700 }} variant="h6">
             Exclusive
@@ -89,11 +91,43 @@ export default function Navbar() {
               </Box>
             )}
 
-            {isMedium && (
-              <IconButton>
-                <SearchOutlinedIcon fontSize="small" />
-              </IconButton>
-            )}
+            {/* {isMedium && (
+              <>         
+         <IconButton onClick={() => setShowSearch(!showSearch)}>
+           <SearchOutlinedIcon fontSize="small" />
+         </IconButton>
+         {showSearch && (
+           <Box
+             sx={{
+               background: "#F5F5F5",
+               borderRadius: "6px",
+               display: "flex",
+               alignItems: "center",
+               px: 1,
+               ml: 1,
+               width: isSmall ? "100%" : "200px",
+          position: isSmall ? "absolute" : "static",
+          top: isSmall ? "70px" : "auto",
+          left: isSmall ? 0 : "auto",
+          right: isSmall ? 0 : "auto",
+          zIndex: 999,
+             }}
+           >
+             <Input
+             autoFocus
+             fullWidth
+               placeholder="Search..."
+               disableUnderline
+               sx={{
+                 fontSize: "small",
+                 "&::placeholder": { fontSize: "xs" },
+               }}
+             />
+           </Box>
+         )}
+         </>
+        )} */}
+       
 
             <IconButton>
               <FavoriteBorderOutlinedIcon fontSize="small" />
@@ -114,9 +148,40 @@ export default function Navbar() {
 
       <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
         <Box width={250} p={2}>
+          
           <Typography variant="h6" gutterBottom>
             Menu
           </Typography>
+
+              {/* Search Input inside Drawer for small screens */}
+    {isSmall && (
+      <Box
+        sx={{
+          background: "#F5F5F5",
+          borderRadius: "6px",
+          display: "flex",
+          alignItems: "center",
+          px: 1,
+          mb: 2,
+        }}
+      >
+        <Input
+          autoFocus
+          fullWidth
+          placeholder="Search..."
+          disableUnderline
+          sx={{
+            fontSize: "small",
+            "&::placeholder": { fontSize: "xs" },
+          }}
+        />
+        <IconButton>
+          <SearchOutlinedIcon fontSize="small" />
+        </IconButton>
+      </Box>
+    )}
+
+      {/* Nav Links */}
           <List>
             {navLinks.map((link, index) => (
               <ListItem button key={index}>

@@ -50,7 +50,7 @@ const CountdownTimer = ({ endDate }) => {
               sx={{
                 fontSize: "var(--font-lg)",
                 fontWeight: 700,
-                minWidth: "50px",
+                minWidth: {   xs:"20px",md:  " 50px"  },
                 textAlign: "center",
               }}
             >
@@ -85,13 +85,34 @@ export default function FlashSales() {
 
   
   const settings = {
+    dots: false,
     infinite: false,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
-    arrows:false,
-  };
+    responsive: [
 
+      {
+        breakpoint: 900, // md screen
+        settings: {
+          slidesToShow: 3,
+        },
+      },
+      {
+        breakpoint: 600, // sm screen
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 480, // xs screen
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
+  };
+  
 
   const ProductCard = styled(Stack)`
   background: var(--success-bg);
@@ -192,10 +213,10 @@ const AnimatedRating = styled(Rating)`
       <Stack
         mx={"50px"}
         mt={2}
-        direction={"row"}
+        direction={ {   xs:"column" , sm:"column", md:"row"  }}
         justifyContent={"space-between"}
       >
-        <Stack direction={"row"} gap={"80px"}>
+        <Stack direction={{ xs:"column", md: "row"   }}    gap={ { xs:"20px", md: "80px"  }}>
           <Typography sx={{ fontSize: "var(--font-lg)", fontWeight: 600 }}>
             Flash Sales
           </Typography>
@@ -230,16 +251,18 @@ const AnimatedRating = styled(Rating)`
         </Stack>
       </Stack>
 
-<Stack display={"flex"} justifyContent={"center"}  width={"96%"} mx={6} >
+<Stack display={"flex"} justifyContent={"center"}  width="96%" mx="auto">
+<Box sx={{ width: "100%" }}>
       {/* Flash Sales Slider */}
       <Slider ref={sliderRef} {...settings}  > 
         {FlashSalesData.map((Sale, index) => (
-            <Stack key={index} >
+            <Box key={index} px={1}>
+            <Stack>
               <ProductCard>
               {/* Product Card */}
               <Stack
                 sx={{ background: "var(--success-bg)", borderRadius: "4px" }}
-                width={"250px"}
+                width={"100%"}
                 height={"230px"}
                 alignItems={"center"}
               >
@@ -322,10 +345,11 @@ const AnimatedRating = styled(Rating)`
                  />
                 {rating[index] > 0 &&  <Typography>({ratingLabels[rating[index] - 1]})</Typography> }
                </Box>
-              
             </Stack>
+            </Box>
         ))}
       </Slider>
+      </Box>
       </Stack>
 
       <Stack direction={"row"} justifyContent={"center"} mt={"20px"}> 

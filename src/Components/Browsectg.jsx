@@ -12,6 +12,7 @@ import {
   Rating,
   Stack,
   Typography,
+  Grid
 } from "@mui/material";
 
 
@@ -72,48 +73,53 @@ export default function Browsectg() {
         justifyContent={"space-between"}
       >
         <Stack direction={"row"} gap={"80px"}>
-          <Typography sx={{ fontSize: "var(--font-lg)", fontWeight: 600 }}>
+          <Typography sx={{ fontSize: { xs:"var(--font-sm)" , sm: "var(--font-md)" , md: "var(--font-lg)" }  , fontWeight: 600 }}>
             Browse By Category
           </Typography>
         </Stack>
 
       </Stack>
-      {/* Browse Category */}
-      <Stack direction={"row"} justifyContent={"center"} gap={"50px"} mt={7}>
-        {Browse.map((ctg, index) => (
-          <Stack
-            key={index}
-            sx={{
-              border: "1px solid #0000004D",
-              borderRadius: "4px",
-              p: "25px 45px 25px 45px",
-              boxShadow: 2,
-              cursor: "pointer",
-              transition:"background-color 0.4s ease-in-out",
-              "&:hover": {
-                backgroundColor:"var(--color-danger)",
-                color:"white",
-                "& .icon" : {
-                    color:"white !important",
-                },
-              },
-            }}
-            alignItems={"center"}
-          >
-            <IconButton disableRipple>
-              {" "}
-              <ctg.icon
-              className="icon"
-                sx={{ fontSize: "var(--font-xl)", color: "black"}}
-              />{" "}
-            </IconButton>
-            <Typography sx={{ fontSize: "var(--font-xs)" }}>
-              {" "}
-              {ctg.name}{" "}
-            </Typography>
-          </Stack>
-        ))}
+{/* Browse Category */}
+<Grid container spacing={4} mt={7} px={7}>
+  {Browse.map((ctg, index) => (
+    <Grid item xs={6} sm={4} md={2} display={"flex"} justifyContent={"center"} key={index}>
+      <Stack
+        sx={{
+          width: {
+            xs: "10px",  // Width for extra small screens
+            sm: "50px",  // Width for small screens and above
+          },
+          border: "1px solid #0000004D",
+          borderRadius: "4px",
+          p: "25px 45px 25px 45px",
+          boxShadow: 2,
+          cursor: "pointer",
+          transition: "background-color 0.4s ease-in-out",
+          "&:hover": {
+            backgroundColor: "var(--color-danger)",
+            color: "white",
+            "& .icon": {
+              color: "white !important",
+            },
+          },
+        }}
+        alignItems={"center"}
+      >
+        <IconButton disableRipple>
+          <ctg.icon
+            className="icon"
+            sx={{ fontSize: "var(--font-xl)", color: "black" }}
+          />
+        </IconButton>
+        <Typography sx={{ fontSize: "var(--font-xs)" }}>
+          {ctg.name}
+        </Typography>
       </Stack>
+    </Grid>
+  ))}
+</Grid>
+
+
             <Stack sx={{border: "0.5px solid black", opacity:"20%", mt:8}} width={"80%"} mx={"auto"}></Stack>
         
       

@@ -8,6 +8,7 @@ import {
   Stack,
   TextField,
   Typography,
+  Grid
 } from "@mui/material";
 import React from "react";
 
@@ -53,7 +54,7 @@ export default function Footer() {
     linkheading: {
       color: "var(--text-color)",
       fontSize: " var(--font-md)",
-      fontWeight: 500,
+      fontWeight: 550,
       textDecoration: "none",
     },
     text: {
@@ -72,18 +73,29 @@ export default function Footer() {
 
   return (
     <>
-      <Box sx={{ background: "#000000" }}>
-        <Box
-          display={"flex"}
-          flexDirection={"row"}
-          justifyContent={"center"}
-          mt={6}
-          pt={"50px"}
-          gap={10}
-          px={5}
-        >
+      <Box sx={{ background: "#000000" , mt:2, px:4 // or remove `width` entirely if not needed
+   // optional: to keep it from growing too wide on large screens
+    }} >
+        <Box  
+         sx={{
+          display: "flex",
+          flexWrap: "wrap",
+       justifyContent: { xs: "flex-start", sm: "space-evenly" },
+        gap: { xs: "20px", sm: "10px", md: 4 },
+          pt: 5,
+        }}>
+        <Box  
+         sx={{
+          width: {
+            xs: "100%",      // full width on mobile
+            sm: "48%",       // 2 items per row on small screens
+            md: "19%",       // 5 items per row on medium+
+          },
+          mb: 4,
+        }}
+          >
           {/* Exclusive */}
-          <Stack gap={"16px"}>
+          <Stack gap={"16px"} >
             <Link sx={styles.heading}> Exclusive</Link>
             <Link sx={styles.linkheading}> Subscribe</Link>
             <Typography sx={styles.text}>
@@ -115,9 +127,20 @@ export default function Footer() {
                 ),
               }}
             />
+
           </Stack>
+          </Box>
+
           {/* Support */}
-          <Stack gap={"16px"}>
+        <Box          sx={{
+          width: {
+            xs: "100%",      // full width on mobile
+            sm: "48%",       // 2 items per row on small screens
+            md: "auto",       // 5 items per row on medium+
+          },
+          mb: 4,
+        }} >
+          <Stack gap={"16px" } >
             <Typography sx={styles.linkheading}>Support</Typography>
             <Typography sx={styles.text}>
               555 DHA Phase 6, Lahore Pakistan
@@ -125,24 +148,52 @@ export default function Footer() {
             <Typography sx={styles.text}>anassheik890@gmail.com</Typography>
             <Typography sx={styles.text}>+923094105183</Typography>
           </Stack>
+          </Box>
+
           {/* Account */}
-          <Stack gap={"16px"}>
+        <Box          sx={{
+          width: {
+            xs: "100%",      // full width on mobile
+            sm: "48%",       // 2 items per row on small screens
+            md: "auto",       // 5 items per row on medium+
+          },
+          mb: 4,
+        }}>
+          <Stack gap={"16px"}  >
             <Typography sx={styles.linkheading}>Account</Typography>
             {Account.map((acc) => (
               <Typography sx={styles.link}> {acc.name} </Typography>
             ))}
           </Stack>
+          </Box>
           {/* Quick Links */}
-          <Stack gap={"16px"}>
-            <Typography sx={styles.linkheading} width={"100px"}>
+        <Box          sx={{
+          width: {
+            xs: "100%",      // full width on mobile
+            sm: "48%",       // 2 items per row on small screens
+            md: "auto",       // 5 items per row on medium+
+          },
+          mb: 4,
+        }} >
+          <Stack gap={"16px"} >
+            <Typography sx={styles.linkheading}>
               Quick Link{" "}
             </Typography>
             {QuickLink.map((quick) => (
               <Typography sx={styles.link}> {quick.name} </Typography>
             ))}
           </Stack>
+          </Box>
           {/* Download App */}
-          <Stack gap={"16px"}>
+        <Box          sx={{
+          width: {
+            xs: "100%",      // full width on mobile
+            sm: "48%",       // 2 items per row on small screens
+            md: "auto",       // 5 items per row on medium+
+          },
+          mb: 4,
+        }}>
+          <Stack gap={"16px"}  >
             <Typography sx={styles.linkheading}>Download App</Typography>
             <Typography
               sx={{
@@ -153,37 +204,37 @@ export default function Footer() {
             >
               Save $3 with App New User Only
             </Typography>
-            <Stack direction={"row"} alignItems={"center"}>
+            <Stack direction={"row"}    flexDirection={ { xs:"column", sm:"column", md:"row" } } alignItems={ {  sm:"start", md: "center"  }} gap={2}>
               {/* QR Code */}
               <Box
                 sx={{
-                  width: "80%",
+                  width: "60%",
                   maxWidth: 200,
                   display: "flex",
-                  justifyContent: "center",
+                  justifyContent: "flex-start",
                 }}
               >
                 <QRCode
                   value="https://www.youtube.com/"
-                  size={90}
+                  size={70}
                   bgColor="#ffffff"
                   fgColor="#000000"
                 />
               </Box>
 
               {/* App Store & Play Store Buttons */}
-              <Stack spacing={2} sx={{ ml: 2 }}>
+              <Stack spacing={2} >
                 <Box
                   component="img"
                   src={googlePlayImg}
                   alt="Google Play"
-                  sx={{ width: 120, cursor: "pointer" }}
+                  sx={{ width: 100, cursor: "pointer" }}
                 />
                 <Box
                   component="img"
                   src={appStoreImg}
                   alt="App Store"
-                  sx={{ width: 120, cursor: "pointer" }}
+                  sx={{ width: 100, cursor: "pointer" }}
                 />
               </Stack>
             </Stack>
@@ -196,6 +247,8 @@ export default function Footer() {
             </Stack>
           </Stack>
         </Box>
+        </Box>
+
         <Typography
           sx={{
             color: "var(--text-color)",
@@ -209,6 +262,7 @@ export default function Footer() {
           @ Copyright Anas 2025 All right reserved
         </Typography>
       </Box>
+
     </>
   );
 }
