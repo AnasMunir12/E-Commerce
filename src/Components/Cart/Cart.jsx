@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import { useSelector , useDispatch } from "react-redux";
-import { UpdateQuantity , RemovefromCart } from "../Utils/itemslice";
+import { UpdateQuantity , RemovefromCart } from "../Utils/ItemSlice";
 
 
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';

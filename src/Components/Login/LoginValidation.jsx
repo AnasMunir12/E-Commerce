@@ -3,7 +3,7 @@ import Signupimg from "../../images/LoginSignup.png";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../Utils/itemslice";
+import { login } from "../Utils/ItemSlice";
 
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";

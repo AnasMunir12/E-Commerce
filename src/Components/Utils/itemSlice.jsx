@@ -89,6 +89,7 @@ const itemSlice = createSlice({
       } else if (!userWithEmail && !userWithPassword) {
         state.currentUser = null;
         state.isAuthenticated = false;
+        state.loginerror = null;
         state.loginerror = "Email and Passowrd ere not correct";
       } else if (!userWithEmail && userWithPassword) {
         state.currentUser = null;
