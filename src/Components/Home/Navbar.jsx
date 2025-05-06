@@ -25,7 +25,7 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import UserMenu from "./UserMenu";
 
 import { useDispatch , useSelector } from "react-redux";
-import { logout } from "../Utils/itemslice";
+import { logout } from "../Utils/itemSlice";
 import { useNavigate } from 'react-router-dom';
 export default function Navbar() {
 const dispatch = useDispatch( );
