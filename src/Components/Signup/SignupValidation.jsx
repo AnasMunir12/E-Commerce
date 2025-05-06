@@ -6,7 +6,7 @@ import googlleicon from "../../images/google.png";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
-import { signup } from "../Utils/ItemSlice";
+import { signup } from "../Utils/itemSlice";
 
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
