@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import storage from 'redux-persist/lib/storage';
 import { persistStore, persistReducer } from 'redux-persist';
 import { combineReducers } from 'redux';
-import itemReducer from './itemSlice'  ;
+import itemReducer from './redux/itemSlice';
 
 
 const persistConfig = {
