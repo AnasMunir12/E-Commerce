@@ -11,9 +11,9 @@ import {
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-import Iphonerimg from "../images/Bannerimg.png";
-import Samsungimg from "../images/samsungbanner.jpg";
-import Oneplusimg from "../images/oneplusbanner.jpg";
+import Iphonerimg from "../../images/Bannerimg.png";
+import Samsungimg from "../../images/samsungbanner.jpg";
+import Oneplusimg from "../../images/oneplusbanner.jpg";
 import AppleIcon from "@mui/icons-material/Apple";
 import AndroidIcon from "@mui/icons-material/Android";
 import SmartphoneIcon from "@mui/icons-material/Smartphone";
@@ -44,8 +44,8 @@ export default function Banner() {
     <Box sx={{ background: "black", color: "white" }}>
       <Slider ref={ImageSlider} {...settings}>
         {Banners.map((banner, index) => (
-          <>
-            <Box maxWidth={"1000px"} mx={"auto"}>
+          <Box key={index}>
+            <Box key={index} maxWidth={"1000px"} mx={"auto"} >
               <Grid container spacing={2} mt={5}>
                 <Grid
                   item
@@ -65,7 +65,7 @@ export default function Banner() {
                     alignItems={"center"}
                   >
                     <IconButton sx={{ color: "white" }}>
-                      {React.cloneElement(banner.icon, {
+                      {React.cloneElement(banner?.icon, {
                         sx: { fontSize: "var(--font-2xl)" },
                       })}
                     </IconButton>
@@ -142,7 +142,7 @@ export default function Banner() {
                 </Box>
               </Grid>
             </Box>
-          </>
+          </Box>
         ))}
       </Slider>
     </Box>

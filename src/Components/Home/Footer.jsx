@@ -17,10 +17,10 @@ import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
 import { QRCode } from "react-qrcode-logo";
 
-import Facebookicon from "../images/facebookIcon.png";
-import InstaIcon from "../images/instagramIcon.png";
-import Linkdinicon from "../images/linkedinIcon.png";
-import Twitttericon from "../images/twitterIcon.png";
+import Facebookicon from "../../images/facebookIcon.png";
+import InstaIcon from "../../images/instagramIcon.png";
+import Linkdinicon from "../../images/linkedinIcon.png";
+import Twitttericon from "../../images/twitterIcon.png";
 
 export default function Footer() {
   const Account = [
@@ -82,7 +82,7 @@ export default function Footer() {
           flexWrap: "wrap",
        justifyContent: { xs: "flex-start", sm: "space-evenly" },
         gap: { xs: "20px", sm: "10px", md: 4 },
-          pt: 5,
+          pt: 10,
         }}>
         <Box  
          sx={{
@@ -161,8 +161,8 @@ export default function Footer() {
         }}>
           <Stack gap={"16px"}  >
             <Typography sx={styles.linkheading}>Account</Typography>
-            {Account.map((acc) => (
-              <Typography sx={styles.link}> {acc.name} </Typography>
+            {Account.map((acc ) => (
+              <Typography key={acc.name} sx={styles.link}> {acc.name} </Typography>
             ))}
           </Stack>
           </Box>
@@ -180,7 +180,7 @@ export default function Footer() {
               Quick Link{" "}
             </Typography>
             {QuickLink.map((quick) => (
-              <Typography sx={styles.link}> {quick.name} </Typography>
+              <Typography key={quick.name} sx={styles.link}> {quick.name} </Typography>
             ))}
           </Stack>
           </Box>

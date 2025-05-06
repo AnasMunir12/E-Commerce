@@ -1,10 +1,10 @@
 import { Box, Button, IconButton, Rating, Stack, Typography, Grid } from "@mui/material";
 import React, { useState } from "react";
 
-import Coat from "../images/coat.png";
-import Bag from "../images/duffle_bag.png";
-import Cpu from "../images/rgbcpu.png";
-import Shelf from "../images/bookshelf.png";
+import Coat from "../../images/coat.png";
+import Bag from "../../images/duffle_bag.png";
+import Cpu from "../../images/rgbcpu.png";
+import Shelf from "../../images/bookshelf.png";
 
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
@@ -110,9 +110,9 @@ export default function Sellingproduct() {
         <Grid container display={"flex"} direction={"row"} justifyContent={"center"} maxWidth={"lg"}  mt={3} mx={"auto"} gap={10}>
         {SellingProductData.map((Sell, index) => (
           <Grid key={index} item  xs={12} sm={4} md={3} lg={2}  display={"flex"} justifyContent={"center"}  >
-            <Box textAlign={"center"}>
+            <Box >
             {/* Product Card */}
-            <ProductCard>
+            <ProductCard >
               <Stack direction={"row"} justifyContent={"space-between"} width={"100%"}>
                 <Stack display={"flex"} direction={"column"} justifyContent={"start"}>
                   <IconButtonStyled>

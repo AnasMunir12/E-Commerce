@@ -1,10 +1,10 @@
 import { Box, Button, Link, Stack, Typography } from "@mui/material";
 import React from "react";
 
-import Playstaion from "../images/Playstation.png";
-import WomenCollection from "../images/WomenCollection.png";
-import Speakers from "../images/Speakers.png";
-import GucciPerfume from "../images/GucciPerfume.png";
+import Playstaion from "../../images/Playstation.png";
+import WomenCollection from "../../images/WomenCollection.png";
+import Speakers from "../../images/Speakers.png";
+import GucciPerfume from "../../images/GucciPerfume.png";
 
 export default function NewArrival() {
   return (

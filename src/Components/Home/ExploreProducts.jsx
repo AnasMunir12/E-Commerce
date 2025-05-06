@@ -14,14 +14,14 @@ import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 
-import Dogfood from "../images/Explore/Dogfood.png";
-import Dslr from "../images/Explore/camera.png";
-import Laptop from "../images/Explore/Laptop.png";
-import Curulogy from "../images/Explore/curology.png";
-import Car from "../images/Explore/minicar.png";
-import Soccershoes from "../images/Explore/shoes.png";
-import Xremote from "../images/Explore/X_remote.png";
-import Jacket from "../images/Explore/jacket.png";
+import Dogfood from "../../images/Explore/Dogfood.png";
+import Dslr from "../../images/Explore/camera.png";
+import Laptop from "../../images/Explore/Laptop.png";
+import Curulogy from "../../images/Explore/curology.png";
+import Car from "../../images/Explore/minicar.png";
+import Soccershoes from "../../images/Explore/shoes.png";
+import Xremote from "../../images/Explore/X_remote.png";
+import Jacket from "../../images/Explore/jacket.png";
 
 import styled from "styled-components";
 

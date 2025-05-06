@@ -1,7 +1,7 @@
 import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-import CategoryImg from "../images/Categories_img.png";
+import CategoryImg from "../../images/Categories_img.png";
 import styled from "styled-components";
 
 const CountdownTimer = ({ endDate }) => {

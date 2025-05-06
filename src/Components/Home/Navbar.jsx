@@ -3,7 +3,6 @@ import {
   Box,
   IconButton,
   Input,
-  Link,
   Stack,
   Typography,
   Drawer,
@@ -12,14 +11,42 @@ import {
   ListItemText,
   useMediaQuery,
   useTheme,
+  Button,
 } from "@mui/material";
+
+import { Link } from "react-router-dom"; // ✅ Correct
 
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 
+import UserMenu from "./UserMenu";
+
+import { useDispatch , useSelector } from "react-redux";
+import { logout } from "../Utils/itemslice";
+import { useNavigate } from 'react-router-dom';
 export default function Navbar() {
+const dispatch = useDispatch( );
+const navigate = useNavigate();
+
+const user = useSelector(state => state.items.currentUser);
+
+const HandleLogout = () => {
+  dispatch(logout());
+  navigate("/login")
+}
+const [UserMenuAnchor , setUserMenuAnchor] = useState(null);
+
+const handleUserMenuOpen = (event) => {
+  setUserMenuAnchor(event.currentTarget);
+};
+
+const handleUserMenuClose = () => {
+  setUserMenuAnchor(null);
+};
+
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.down("md"));
   const isSmall = useMediaQuery(theme.breakpoints.down("sm"));
@@ -27,12 +54,11 @@ export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
 
-
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "Contact", path: "/" },
-    { name: "About", path: "/" },
-    { name: "Sign Up", path: "/" },
+    { name: "Contact", path: "/contact" },
+    { name: "About", path: "/about" },
+    { name: "Login", path: "/login" },
   ];
 
   const toggleDrawer = (open) => () => {
@@ -47,20 +73,42 @@ export default function Navbar() {
           alignItems={"center"}
           justifyContent={"space-evenly"}
         >
-          <Typography sx={{ fontWeight: 700 }} variant="h6">
-            Exclusive
-          </Typography>
-
+          <Link to={"/"} style={{ textDecoration: "none" }}>
+            <Typography
+              variant="h6"
+                  sx={{
+                    fontWeight: 700,
+                    color: "black", // optional: ensure color stays consistent
+                    "&:hover": {
+                      color: "var(--color-danger)", // optional hover effect
+                    },
+                  }}
+            >
+              Exclusive
+            </Typography>
+          </Link>
           {!isSmall && (
             <Stack direction="row" spacing={4}>
-              {navLinks.map((link, idx) => (
+              {navLinks.map((link, index) => (
                 <Link
-                  key={idx}
-                  href={link.path}
-                  underline="hover"
-                  sx={{ fontSize: "small", color: "black" }}
+                  key={index}
+                  to={link.path}
+                  style={{
+                    textDecoration: "none",
+                  }}
                 >
-                  {link.name}
+                  <Typography
+                    sx={{
+                      color: "black",
+                      fontSize: "small",
+                      transition: "color 0.3s ease",
+                      "&:hover": {
+                        color: "var(--color-danger)",
+                      },
+                    }}
+                  >
+                    {link.name}
+                  </Typography>
                 </Link>
               ))}
             </Stack>
@@ -78,7 +126,7 @@ export default function Navbar() {
                 }}
               >
                 <Input
-                  placeholder='What are you looking for?'
+                  placeholder="What are you looking for?"
                   disableUnderline
                   sx={{
                     fontSize: "small",
@@ -127,7 +175,6 @@ export default function Navbar() {
          )}
          </>
         )} */}
-       
 
             <IconButton>
               <FavoriteBorderOutlinedIcon fontSize="small" />
@@ -136,6 +183,17 @@ export default function Navbar() {
             <IconButton>
               <ShoppingCartOutlinedIcon fontSize="small" />
             </IconButton>
+
+            <IconButton onClick={handleUserMenuOpen}>
+              <AccountCircleOutlinedIcon fontSize="small"/>
+            </IconButton>
+            <UserMenu 
+            anchorEl={UserMenuAnchor}
+            open={Boolean(UserMenuAnchor)}
+            onClose={handleUserMenuClose}
+            HandleLogout={HandleLogout}
+            user={user}
+            />
 
             {isSmall && (
               <IconButton onClick={toggleDrawer(true)}>
@@ -148,44 +206,53 @@ export default function Navbar() {
 
       <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
         <Box width={250} p={2}>
-          
           <Typography variant="h6" gutterBottom>
             Menu
           </Typography>
 
-              {/* Search Input inside Drawer for small screens */}
-    {isSmall && (
-      <Box
-        sx={{
-          background: "#F5F5F5",
-          borderRadius: "6px",
-          display: "flex",
-          alignItems: "center",
-          px: 1,
-          mb: 2,
-        }}
-      >
-        <Input
-          autoFocus
-          fullWidth
-          placeholder="Search..."
-          disableUnderline
-          sx={{
-            fontSize: "small",
-            "&::placeholder": { fontSize: "xs" },
-          }}
-        />
-        <IconButton>
-          <SearchOutlinedIcon fontSize="small" />
-        </IconButton>
-      </Box>
-    )}
+          {/* Search Input inside Drawer for small screens */}
+          {isSmall && (
+            <Box
+              sx={{
+                background: "#F5F5F5",
+                borderRadius: "6px",
+                display: "flex",
+                alignItems: "center",
+                px: 1,
+                mb: 2,
+              }}
+            >
+              <Input
+                autoFocus
+                fullWidth
+                placeholder="Search..."
+                disableUnderline
+                sx={{
+                  fontSize: "small",
+                  "&::placeholder": { fontSize: "xs" },
+                }}
+              />
+              <IconButton>
+                <SearchOutlinedIcon fontSize="small" />
+              </IconButton>
+            </Box>
+          )}
 
-      {/* Nav Links */}
+          {/* Nav Links */}
           <List>
             {navLinks.map((link, index) => (
-              <ListItem button key={index}>
-                <ListItemText primary={link.name} />
+              <ListItem button key={index} onClick={toggleDrawer(false)}>
+                <Link to={link.path}>
+                  <Box
+                    sx={{
+                      color: "black",
+                      width: "100%",
+                      display: "block",
+                    }}
+                  >
+                    <ListItemText primary={link.name} />
+                  </Box>
+                </Link>
               </ListItem>
             ))}
           </List>
