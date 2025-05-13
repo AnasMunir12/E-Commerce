@@ -23,6 +23,8 @@ export default function Cart() {
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const total = subtotal; // Add shipping if needed
 
+  const navigate = useNavigate();
+
   if (cartItems.length === 0) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
@@ -30,7 +32,7 @@ export default function Cart() {
       </Box>
     );
   }
-  const navigate = useNavigate();
+ 
 
   if (!cartItems) {
     return (
@@ -39,6 +41,10 @@ export default function Cart() {
       </Box>
     );
   }
+
+  const HandleCheckout = () => {
+    navigate('/checkout' , {state:{ cartItems }});
+  };
 
   return (
     <>
@@ -236,7 +242,7 @@ export default function Cart() {
             <Typography>Total:</Typography>
             <Typography>${subtotal}</Typography>
           </Box>
-          <Button variant="contained"  sx={{ backgroundColor:"var(--color-danger)" , width:"250px", mx:"auto"}} >Process To Checkout</Button>
+          <Button onClick={HandleCheckout} variant="contained"  sx={{ backgroundColor:"var(--color-danger)" , width:"250px", mx:"auto"}} >Process To Checkout</Button>
         </Box>
       </Box>
 

@@ -11,6 +11,8 @@ import ProductDt from './Components/Productdetail/ProductDt'
 import ScrollToTop from './Components/ScrollToTop'
 import AddtoCart from './Pages/AddtoCart'
 import Checkout from './Pages/Checkout'
+import ConfirmOrder from './Pages/ConfirmOrder'
+// import EmailVerification from './Components/Signup/EmailVerfication'
 
 function App() {
   const location = useLocation();
@@ -24,9 +26,11 @@ function App() {
         <Route path='/product/:id' element={<ProductDt />} />
         <Route path='/cart' element={<AddtoCart />} />
         <Route path='/checkout' element={<Checkout />} />
+        <Route path='/orderConfirmation' element={<ConfirmOrder />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/signup' element={<Signup />} />
+        {/* <Route path='/verify-email/:token' element={<EmailVerification />} /> */}
         <Route path='/login' element={<Login />} />
       </Routes>
        { !HideNavbar &&  <Footer />}

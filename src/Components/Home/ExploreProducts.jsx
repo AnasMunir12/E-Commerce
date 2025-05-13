@@ -31,13 +31,22 @@ const ProductCard = styled(Stack)`
   width: 250px;
   height: 230px;
   align-items: center;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, opacity 0.4s ease;
+  opacity: 0;
+  animation: fadeIn 0.4s forwards;
 
   &:hover {
     transform: scale(1.05);
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
 `;
+
 
 const IconButtonStyled = styled(IconButton)`
   background: white;
@@ -66,9 +75,15 @@ const AnimatedRating = styled(Rating)`
   & .MuiRating-iconFilled:hover {
     transform: scale(1.2);
   }
+     overflow: hidden;
+  transition: max-height 0.6s ease, opacity 0.6s ease;
+  max-height: ${({ show }) => (show ? "2000px" : "600px")};
+  opacity: ${({ show }) => (show ? 1 : 1)};
 `;
 
 export default function ExploreProducts() {
+  const [ showall , setShowall ]=useState(false);
+
   const ExploreProductData = [
     { img: Dogfood, name: "The north coat", price: 260 },
     { img: Dslr, name: "Gucci duffle bag", price: 960 },
@@ -124,34 +139,11 @@ export default function ExploreProducts() {
             Explore Our Products
           </Typography>
         </Stack>
-        {/* Icons */}
-        {/* <Stack direction={"row"}>
-          <IconButton>
-            <ArrowBackRoundedIcon
-              sx={{
-                fontSize: "var(--font-md)",
-                border: "2px solid var(--success-bg)",
-                borderRadius: "50%",
-                color: "black",
-                p: "4px",
-              }}
-            />
-          </IconButton>
-          <IconButton>
-            <ArrowForwardRoundedIcon
-              sx={{
-                fontSize: "var(--font-md)",
-                border: "2px solid var(--success-bg)",
-                borderRadius: "50%",
-                color: "black",
-                p: "4px",
-              }}
-            />
-          </IconButton>
-        </Stack> */}
+ 
       </Stack>
 
       <Stack alignItems="center" justifyContent="center" width="100%">
+        <AnimatedGridWrapper show={showall}>
         <Grid
           container
           justifyContent={"center"}
@@ -159,7 +151,7 @@ export default function ExploreProducts() {
           mt={3}
           maxWidth="lg"
         >
-          {ExploreProductData.map((Explore, index) => (
+          {( showall? ExploreProductData:  ExploreProductData.slice(0,4)).map((Explore, index) => (
             <Grid item xs={12} sm={6} md={4} lg={3}  key={index} display={"flex"} justifyContent={"center"}>
               <Box>
               {/* Product Card */}
@@ -222,18 +214,28 @@ export default function ExploreProducts() {
             </Grid>
           ))}
         </Grid>
+        </AnimatedGridWrapper>
       </Stack>
 
       <Stack direction={"row"} justifyContent={"center"} mt={"40px"}>
         <StyledWrapper>
-          <button>
-            <span>View All Products</span>
+          <button onClick={() => setShowall(!showall)}>
+            <span>{ showall ? "View Less" : "View All Products" }</span>
           </button>
         </StyledWrapper>
       </Stack>
     </>
   );
 }
+
+
+const AnimatedGridWrapper = styled.div`
+  overflow: hidden;
+  transition: max-height 0.6s ease, opacity 0.6s ease;
+  max-height: ${({ show }) => (show ? "2000px" : "600px")};
+  opacity: ${({ show }) => (show ? 1 : 1)};
+`;
+
 
 const StyledWrapper = styled.div`
   button {

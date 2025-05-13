@@ -177,6 +177,8 @@ export default function Sellingproduct() {
       
       <br />
       <br />
+      <br />
+      <br />
     </>
   );
 }
@@ -192,13 +194,13 @@ const StyledWrapper = styled.div`
     --color-background: var(--color-danger);
     --color-outline: #ff145b80;
     --color-shadow: #00000080;
-    padding: 20px;
+    padding: 10px;
   }
 
   .btn-content {
     display: flex;
     align-items: center;
-    padding: 5px 30px;
+    padding: 2px 20px;
     text-decoration: none;
     font-family: 'Poppins', sans-serif;
     font-weight: 600;

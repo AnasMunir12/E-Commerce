@@ -88,6 +88,7 @@ export default function Browsectg() {
           width: {
             xs: "10px",  // Width for extra small screens
             sm: "50px",  // Width for small screens and above
+            md:"100px",
           },
           border: "1px solid #0000004D",
           borderRadius: "4px",

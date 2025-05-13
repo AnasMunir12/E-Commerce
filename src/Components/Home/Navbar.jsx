@@ -19,6 +19,7 @@ import { Link } from "react-router-dom"; // ✅ Correct
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 
@@ -64,6 +65,13 @@ const handleUserMenuClose = () => {
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
   };
+
+    const [liked, setLiked] = useState(false);
+
+    const Handleclicked  = () => {
+      setLiked(!liked);
+    }
+
 
   return (
     <>
@@ -176,9 +184,13 @@ const handleUserMenuClose = () => {
          </>
         )} */}
 
-            <IconButton>
+            <IconButton onClick={Handleclicked}>
+              { liked ? (
+
+              <FavoriteOutlinedIcon fontSize="small"  style={{ color:"var(--color-danger)"}}/> ) : ( 
               <FavoriteBorderOutlinedIcon fontSize="small" />
-            </IconButton>
+            )}
+              </IconButton>
 
             <IconButton>
               <ShoppingCartOutlinedIcon fontSize="small" />

@@ -9,6 +9,7 @@ const initialState = {
   currentUser: null ,
   isAuthenticated: false,
   loginerror : null ,
+  order: [],
 };
  
 const itemSlice = createSlice({
@@ -110,10 +111,30 @@ const itemSlice = createSlice({
     logout: (state) => {
       state.currentUser = null ;
       state.isAuthenticated = false;
-    }
+    },
+
+    placeOrder: (state, action) => {
+      if(state.cartItems.length === 0) return;
+
+      if(!Array.isArray(state.order)) {
+        state.order = [];
+      }
+
+      const newOrder = {
+        id: Date.now().toString(),
+        items: [...state.cartItems],
+        total: state.cartItems.reduce((sum , item) => sum + (item.price * item.quantity), 0),
+        date: new Date().toISOString(),
+        status: "Pending",
+        shippingInfo: action.payload,
+      }
+
+      state.order.push(newOrder);
+      state.cartItems = [ ];
+    },
     
   },
 });
 
-export const { addItem, addToProduct , UpdateQuantity , RemovefromCart, signup, login , logout} = itemSlice.actions;
+export const { addItem, addToProduct , UpdateQuantity , RemovefromCart, signup, login , logout, placeOrder} = itemSlice.actions;
 export default itemSlice.reducer;

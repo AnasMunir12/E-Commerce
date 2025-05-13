@@ -1,243 +1,248 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Signupimg from "../../images/LoginSignup.png";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-
 import googlleicon from "../../images/google.png";
-import { Link, useNavigate } from "react-router-dom";
-
-import { useDispatch, useSelector } from "react-redux";
-import { signup } from "../Utils/itemSlice";
-
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
-
+import {
+  Box,
+  Grid,
+  TextField,
+  Typography,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import styled from "styled-components";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import HashLoader from "react-spinners/HashLoader";
 
-export default function SignupValidation() {
-  const navigate = useNavigate();
+import { InputAdornment, IconButton } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-  const users = useSelector((state) => state.items.registerusers);
 
-  const [email, SetEmail] = useState("");
-  const [password, SetPassword] = useState("");
+export default function Signup() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [emailerror, setEmailerror] = useState("");
-  const dispatch = useDispatch();
+  const [shouldNavigate, setShouldNavigate] = useState(false);
+
+
+  const [showPassword, setShowPassword] = useState(false);
+
+const handleClickShowPassword = () => setShowPassword(!showPassword);
+
 
   const [open, setOpen] = useState(false);
-  const [snackmessage, setSnackMessage] = useState("");
-  const [snackSeverity, setSnackSeverity] = useState("Success");
+  const [snackMsg, setSnackMsg] = useState("");
+  const [snackSeverity, setSnackSeverity] = useState("success");
+  const [loading, setLoading] = useState(false);
 
-  const validateEmail = (email) => {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
-  };
 
-  const HandleSignup = () => {
+
+  const navigate = useNavigate();
+
+const validateEmail = (email) => /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(email);
+
+  const handleSignup = async () => {
+    // Frontend validations
     if (!name || !email || !password) {
-      setSnackMessage("Please fill all fields");
+      setSnackMsg("All fields are required");
+      setSnackSeverity("error");
+      setOpen(true);
+      return;
+    }
+
+    if (name.trim().length < 3) {
+      setSnackMsg("Name must be at least 3 characters long");
       setSnackSeverity("error");
       setOpen(true);
       return;
     }
 
     if (!validateEmail(email)) {
-      setEmailerror(
-        " Please enter a valid email address (e.g., example@gmail.com)"
-      );
-      setSnackMessage("Invalid Email format");
-      setSnackSeverity("error");
-      setOpen(true);
-      return;
-    } else {
-      setEmailerror(" ");
-    }
-
-    // check if user already registered
-    const userExist = users.some((user) => user.email === email);
-    const Passwordexist = users.some((user) => user.password === password);
-    if (userExist) {
-      setSnackMessage(
-        " Email is already registered. Please use a different email ."
-      );
+      setSnackMsg("Please enter a valid email address (e.g., example@gmail.com)");
       setSnackSeverity("error");
       setOpen(true);
       return;
     }
 
-    if (Passwordexist) {
-      setSnackMessage(
-        "Password is already Registered. Please use a different Password"
-      );
+    if (password.length < 6) {
+      setSnackMsg("Password must be at least 6 characters long");
       setSnackSeverity("error");
       setOpen(true);
       return;
     }
-    dispatch(signup({ name, email, password }));
 
-    // Clear form and show success message
-    SetEmail("");
-    SetPassword("");
-    setName("");
-    setSnackMessage("Signup successful! Redirecting to login...");
-    setSnackSeverity("success");
-    setOpen(true);
-    setTimeout(() => navigate("/login"), 2000); // redirect after 1 second
+try {
+  const response = await axios.post("http://localhost:5000/api/user/signup", {
+    name,
+    email,
+    password,
+  });
 
-    console.log("Dispatched signup with:", { email, password });
-  };
+if (response.status === 200 || response.status === 201) {
+  setSnackMsg("Signup successful! Check your email to verify.");
+  setSnackSeverity("success");
+  setOpen(true);
 
-  const handleClose = () => {
-    setOpen(false);
-    if (snackSeverity === "success") {
+  setName("");
+  setEmail("");
+  setPassword("");
+
+  // Wait for snackbar to show clearly before loading screen
+  setTimeout(() => {
+    setLoading(true);
+    // Then wait 1 more second, then navigate
+    setTimeout(() => {
+      setLoading(false);
       navigate("/login");
-    }
+    }, 1000);
+  }, 1500); // enough time for user to see Snackbar
+}
+} catch (error) {
+  console.error("Signup Error:", error.response?.data);
+  setSnackMsg(error.response?.data?.message || "Signup failed");
+  setSnackSeverity("error");
+setOpen(true);
+} 
+
   };
 
-  // Then in your component, check the updated state:
-  useEffect(() => {
-    console.log("Current users:", users);
-  }, [users]);
+const handleClose = () => {
+  setOpen(false);
+  setSnackMsg("");
+};
+
 
   return (
     <>
+      {loading && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(255, 255, 255, 0.8)",
+            zIndex: 9999,
+          }}
+        >
+          <HashLoader color="var(--color-danger)" size={80} />
+        </Box>
+      )}
+
       <Snackbar
         open={open}
         autoHideDuration={3000}
-        onClose={() => setOpen(false)}
+        onClose={handleClose}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <Alert
-          onClose={handleClose}
-          severity={snackSeverity}
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          {snackmessage}
+        <Alert severity={snackSeverity} variant="filled" sx={{ width: "100%" }}>
+          {snackMsg}
         </Alert>
       </Snackbar>
+
       <Grid container mt={4}>
-        {/* Left side Image */}
-        <Grid item xs={12} md={6}>
-          <Box
-            sx={{
-              width: "100%",
-            }}
-          >
-            <img
-              src={Signupimg}
-              alt="Signup Image"
-              style={{ width: "100%" }}
-            ></img>
-          </Box>
-        </Grid>
-        {/* Right Side  Sectionj */}
+
         <Grid
           item
           xs={12}
           md={6}
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"center"}
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
         >
-          <Box Width={"100%"}>
-            <Box
-              sx={{}}
-              display={"flex"}
-              flexDirection={"column"}
-              alignItems={"center"}
-            >
+          <Box width="100%">
+            <Box display="flex" flexDirection="column" alignItems="center">
               <Typography
                 sx={{
-                  fontSize: { xs: "var(--font-lg) ", md: "var(--font-xl) " },
+                  fontSize: { xs: "var(--font-lg)", md: "var(--font-xl)" },
                   fontWeight: 500,
                   fontFamily: "var(--family-tertiary)",
                 }}
               >
-                Create an Account{" "}
+                Create an Account
               </Typography>
               <Typography
                 sx={{
-                  fontSize: { xs: "var(--font-xs) ", md: "var(--font-sm) " },
+                  fontSize: { xs: "var(--font-xs)", md: "var(--font-sm)" },
                   fontWeight: 400,
                   fontFamily: "var(--family-tertiary)",
                 }}
               >
-                Enter your details below{" "}
+                Enter your details below
               </Typography>
 
               <Box
-                display={"flex"}
-                flexDirection={"column"}
-                justifyContent={"center"}
-                mx={"auto"}
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                mx="auto"
                 gap={2}
-                width={"50%"}
+                width="50%"
               >
                 <TextField
                   label="Name"
                   variant="standard"
+                  value={name}
                   onChange={(e) => setName(e.target.value)}
-                  InputLabelProps={{
-                    sx: {
-                      fontSize: { xs: "12px", md: "16px" }, // Responsive label font size
-                      whiteSpace: "nowrap", // Prevent text from wrapping
-                      overflow: "visible",
-                    },
-                  }}
+                  InputLabelProps={{ sx: { fontSize: { xs: "12px", md: "16px" } } }}
                 />
                 <TextField
-                  label="Email or Phone Number"
-                  onChange={(e) => SetEmail(e.target.value)}
+                  label="Email"
                   variant="standard"
-                  InputLabelProps={{
-                    sx: {
-                      fontSize: { xs: "12px", md: "16px" }, // Responsive label font size
-                      whiteSpace: "nowrap", // Prevent text from wrapping
-                      overflow: "visible",
-                    },
-                  }}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  InputLabelProps={{ sx: { fontSize: { xs: "12px", md: "16px" } } }}
                 />
-                <TextField
-                  label="Password"
-                  variant="standard"
-                  onChange={(e) => SetPassword(e.target.value)}
-                  InputLabelProps={{
-                    sx: {
-                      fontSize: { xs: "12px", md: "16px" }, // Responsive label font size
-                      whiteSpace: "nowrap", // Prevent text from wrapping
-                      overflow: "visible",
-                    },
-                  }}
-                />
+               <TextField
+  label="Password"
+  type={showPassword ? "text" : "password"}
+  variant="standard"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  InputLabelProps={{ sx: { fontSize: { xs: "12px", md: "16px" } } }}
+  InputProps={{
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton
+          onClick={handleClickShowPassword}
+          edge="end"
+        >
+          {showPassword ? <VisibilityOff /> : <Visibility />}
+        </IconButton>
+      </InputAdornment>
+    ),
+  }}
+/>
+
               </Box>
 
-              <Box mt={4} width={"50%"} mx={"auto"}>
-                <Box>
-                  <StyledWrapper>
-                    <button
-                      className="frutiger-button"
-                      onClick={HandleSignup}
-                      style={{ width: "100%" }}
-                    >
-                      <div className="inner">
-                        <div className="top-white" />
-                        <span className="text">Create Account</span>
-                      </div>
-                    </button>
-                  </StyledWrapper>
-                </Box>
+              <Box mt={4} width="50%" mx="auto">
+                <StyledWrapper>
+                  <button
+                    className="frutiger-button"
+                    onClick={handleSignup}
+                    style={{ width: "100%" }}
+                    disabled={loading}
+                  >
+                    <div className="inner">
+                      <div className="top-white" />
+                      <span className="text">Create Account</span>
+                    </div>
+                  </button>
+                </StyledWrapper>
+
                 <Box
-                  display={"flex"}
-                  justifyContent={"center"}
-                  alignItems={"center"}
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
                   gap={2}
                   sx={{
                     border: "1px solid #00000066",
-                    padding: {
-                      xs: "10px 0px 10px 0px",
-                      md: "10px 0px 10px 0px",
-                    },
+                    padding: "10px 0",
                     borderRadius: "4px",
                     width: "100%",
                     cursor: "pointer",
@@ -254,20 +259,13 @@ export default function SignupValidation() {
                     }}
                   />
                   <Typography
-                    sx={{
-                      fontSize: { xs: "var(--font-xs)", md: "var(--font-md)" },
-                    }}
+                    sx={{ fontSize: { xs: "var(--font-xs)", md: "var(--font-md)" } }}
                   >
                     Sign up with Google
                   </Typography>
                 </Box>
-                <Box
-                  display={"flex"}
-                  justifyContent={"center"}
-                  width={"100%"}
-                  gap={2}
-                  mt={2}
-                >
+
+                <Box display="flex" justifyContent="center" width="100%" gap={2} mt={2}>
                   <Typography
                     sx={{
                       fontSize: { xs: "var(--font-xs)", md: "var(--font-sm)" },
@@ -275,10 +273,7 @@ export default function SignupValidation() {
                     }}
                   >
                     Already have an account?{" "}
-                    <Link
-                      to="/login"
-                      style={{ color: "black", fontWeight: 700, textAlign: {} }}
-                    >
+                    <Link to="/login" style={{ color: "black", fontWeight: 700 }}>
                       Log in
                     </Link>
                   </Typography>
@@ -287,6 +282,14 @@ export default function SignupValidation() {
             </Box>
           </Box>
         </Grid>
+
+          <Grid item xs={12} md={6}>
+  <StyledImageWrapper>
+    <img src={Signupimg} alt="Signup" />
+  </StyledImageWrapper>
+</Grid>
+
+
       </Grid>
       <br />
       <br />
@@ -296,69 +299,99 @@ export default function SignupValidation() {
   );
 }
 
+const StyledImageWrapper = styled(Box)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 20px; /* Space around image for border visibility */
+
+  img {
+    width: 90%;
+    border: 3px solid var(--text-color); /* or any color likergb(129, 127, 127) */
+    border-radius: 12px;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  @keyframes float {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    25% {
+      transform: translate(10px, -10px);
+    }
+    50% {
+      transform: translate(0px, -20px);
+    }
+    75% {
+      transform: translate(-10px, -10px);
+    }
+    100% {
+      transform: translate(0px, 0px);
+    }
+  }
+`;
+
+
 const StyledWrapper = styled.div`
   .frutiger-button {
     cursor: pointer;
     position: relative;
     padding: 2px;
-    border-radius: 6px;
-    border: 0;
-    background: linear-gradient(#db4444, #db4444);
-    box-shadow: 0px 4px 6px 0px #00000044;
-    transition: 0.3s all;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(var(--color-danger), var(--color-danger));
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    transition: all 0.3s ease-in-out;
   }
 
   .frutiger-button:hover {
-    box-shadow: 0px 6px 12px 0px #00000066;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+    transform: translateY(-1px);
   }
 
   .frutiger-button:active {
-    box-shadow: 0px 0px 0px 0px transparent;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    transform: scale(0.98);
   }
 
   .inner {
     position: relative;
-    inset: 0px;
-    padding: 0.75em;
-    border-radius: 4px;
-    background: radial-gradient(circle at 50% 100%, #db4444 10%, #db4444 55%),
-      linear-gradient(#a03333, #db4444);
+    padding: 0.75em 1.25em;
+    border-radius: 6px;
+    background: radial-gradient(circle at top left, var(--color-danger) 0%, #b92b27 100%);
     overflow: hidden;
-    transition: inherit;
+    transition: all 0.3s ease-in-out;
   }
 
   .inner::before {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(-65deg, transparent 40%, #ffffff44 50%, transparent 70%);
+    background: linear-gradient(
+      120deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.25) 50%,
+      transparent 100%
+    );
     background-size: 200% 100%;
-    background-repeat: no-repeat;
-    animation: thing 3s ease infinite;
+    animation: shimmer 2s infinite;
+    z-index: 0;
   }
 
-  @keyframes thing {
+  @keyframes shimmer {
     0% {
-      background-position: 130%;
-      opacity: 1;
+      background-position: 200% 0;
     }
     100% {
-      background-position: -166%;
-      opacity: 0;
+      background-position: -200% 0;
     }
-  }
-
-  .top-white {
-    position: absolute;
-    border-radius: inherit;
-    inset: 0 -8em;
-    background: radial-gradient(
-      circle at 50% -270%,
-      #ffffff 30%,
-      #ffffff44 60%,
-      transparent 60%
-    );
-    transition: inherit;
   }
 
   .inner::after {
@@ -366,21 +399,17 @@ const StyledWrapper = styled.div`
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    transition: inherit;
-    box-shadow: inset 0px 2px 8px -2px transparent;
-  }
-
-  .frutiger-button:active .inner::after {
-    box-shadow: inset 0px 2px 8px -2px #00000033;
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.1);
+    z-index: 0;
   }
 
   .text {
     position: relative;
     z-index: 1;
-    color: white; /* Softer and more readable */
+    color: #fff;
     font-weight: 600;
-    font-size: 16px; /* Normal font size */
-    font-family: sans-serif;
-    transition: inherit;
+    font-size: 16px;
+    font-family: "Segoe UI", sans-serif;
+    letter-spacing: 0.5px;
   }
 `;

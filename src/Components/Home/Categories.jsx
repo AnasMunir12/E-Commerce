@@ -39,7 +39,7 @@ const CountdownTimer = ({ endDate }) => {
         <Stack key={index} alignItems={"center"} direction={"row"}>
           <Stack
             alignItems={"center"}
-            sx={{ background: bgColors[unit], borderRadius: "50%", p:{  xs:0.8,  md: 1 }  }}
+            sx={{ background: bgColors[unit], borderRadius: "50%", p:{  xs:0.8,  md: 1.5}  }}
           >
             <Typography
               sx={{

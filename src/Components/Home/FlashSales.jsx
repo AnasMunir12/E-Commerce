@@ -7,6 +7,7 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 
+
 import styled from "styled-components";
 
 import { Link } from "react-router-dom";
@@ -46,7 +47,7 @@ const CountdownTimer = ({ endDate }) => {
   }, [endDate]);
 
   return (
-    <Stack direction={"row"} spacing={1} alignItems={"center"}>
+    <Stack direction={"row"} spacing={3} alignItems={"center"}>
       {["days", "hours", "minutes", "seconds"].map((unit, index) => (
         <Stack key={index} alignItems={"center"} direction={"row"}>
           <Stack alignItems={"center"}>
@@ -85,6 +86,7 @@ const CountdownTimer = ({ endDate }) => {
 };
 
 export default function FlashSales() {
+
   const dispatch = useDispatch(); // when I have to store  item
   const cartItems = useSelector((state) => state.items.cartItems); // when I get the item
   console.log("Items Data", cartItems);
@@ -134,7 +136,7 @@ export default function FlashSales() {
     margin: 0 auto;
 
     &:hover {
-      transform: scale(1.05);
+      transform: scale(1.01);
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     }
   `;
@@ -250,6 +252,7 @@ export default function FlashSales() {
         mt={2}
         direction={{ xs: "column", sm: "column", md: "row" }}
         justifyContent={"space-between"}
+      
       >
         <Stack
           direction={{ xs: "column", md: "row" }}
@@ -262,7 +265,7 @@ export default function FlashSales() {
         </Stack>
 
         {/* Navigation Buttons */}
-        <Stack direction={"row"}>
+        <Stack direction={"row"} >
           <IconButton
             onClick={() => sliderRef.current.slickPrev()}
             disableRipple
@@ -294,7 +297,7 @@ export default function FlashSales() {
         </Stack>
       </Stack>
 
-      <Stack display={"flex"} justifyContent={"center"} width="96%" mx="auto">
+      <Stack display={"flex"} justifyContent={"center"} width="96%" mx="auto" mt={3}>
         <Box sx={{ width: "100%" }}>
           {/* Flash Sales Slider */}
           <Slider ref={sliderRef} {...settings}>
@@ -339,7 +342,7 @@ export default function FlashSales() {
                           <IconButton>
                             <FavoriteBorderOutlinedIcon
                               sx={{
-                                background: "white",
+                                // background: "white",
                                 borderRadius: "15px",
                                 p: "3px",
                               }}
@@ -348,7 +351,7 @@ export default function FlashSales() {
                           <IconButton>
                             <VisibilityOutlinedIcon
                               sx={{
-                                background: "white",
+                                // background: "white",
                                 borderRadius: "15px",
                                 p: "3px",
                               }}
@@ -451,16 +454,16 @@ export default function FlashSales() {
         </Box>
       </Stack>
 
-      <Stack direction={"row"} justifyContent={"center"} mt={"20px"}>
+      {/* <Stack direction={"row"} justifyContent={"center"} mt={"20px"}>
         <StyledWrapper>
           <button>
             <span>View All Products</span>
           </button>
         </StyledWrapper>
-      </Stack>
+      </Stack> */}
 
       <Stack
-        sx={{ border: "0.5px solid black", opacity: "20%", mt: 6 }}
+        sx={{ border: "0.5px solid black", opacity: "20%", mt: 12 }}
         width={"80%"}
         mx={"auto"}
       ></Stack>

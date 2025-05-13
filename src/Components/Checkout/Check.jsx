@@ -1,9 +1,14 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link , useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
 
 import Checkbox from "@mui/material/Checkbox";
 import Radio from "@mui/material/Radio";
+
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
 
 import Remote from "../../images/xremote.png";
 import Keyboard from "../../images/keyboard.png";
@@ -12,19 +17,113 @@ import Lcd from "../../images/LCD.png";
 import PayPal from '../../images/paypal.png'
 import MasterCard from '../../images/MasterCard.png'
 import Visa from '../../images/visa.png'
+import { placeOrder } from "../Utils/itemSlice";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 export default function Check() {
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'error', // can be 'success', 'info', 'warning'
+  });
+
+  const showSnackbar = (message, severity = 'error') => {
+    setSnackbar({ open: true, message, severity });
+  };
+  
+  const dispatch = useDispatch();
+ const navigate = useNavigate();
+
+  const cartItems = useSelector((state) => state.items.cartItems );
+  const currentUser = useSelector((state) => state.items.currentUser);
+
   const [selectedValue, setSelectedValue] = React.useState("a");
+  const [formData , setFormData] = useState({
+    fullName: '',
+  companyName: '',
+  streetAddress: '',
+  apartment: '',
+  townCity: '',
+  phoneNumber: '',
+  emailAddress: currentUser?.email || '',
+  saveInfo: false,
+  paymentMethod: 'bank',
+  });
+
+  // Phone number formatting function
+const formatPhoneNumber = (phoneNumber) => {
+  if (!phoneNumber) return phoneNumber;
+  
+  const phoneNumberValue = phoneNumber.replace(/[^\d]/g, '');
+  const phoneNumberLength = phoneNumberValue.length;
+  
+  if (phoneNumberLength < 3) return phoneNumberValue;
+  
+  if (phoneNumberLength < 6) {
+    return `(${phoneNumberValue.slice(0, 3)}) ${phoneNumberValue.slice(3)}`;
+  }
+  
+  return `(${phoneNumberValue.slice(0, 3)}) ${phoneNumberValue.slice(3, 6)}-${phoneNumberValue.slice(6, 10)}`;
+};
+
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
 
-  const Product = [
-    { productimg: Remote, Name: "LCD Minitor", price: 650 },
-    { productimg: Lcd, Name: "HI Gamepad", price: 1150 },
-  ];
+
+  const HandleInputChange = (e) => {
+    const { name, value, type, checked} = e.target;
+setFormData({
+  ...formData,
+  [name] : type === "checkbox" ? checked : value
+});
+  };
+
+  const HandleSubmit = (e) => {
+    e.preventDefault();
+
+
+      // Phone number validation (at least 10 digits)
+  if (formData.phoneNumber.replace(/\D/g, '').length < 10) {
+    showSnackbar('Please enter a valid phone number');
+    return;
+  }
+
+    // Validation
+    if(!formData.fullName || !formData.streetAddress || !formData.townCity || !formData.phoneNumber || !formData.emailAddress) {
+      showSnackbar('Please fill in all required fields');
+      return;
+    }
+
+    if (cartItems.length === 0) {
+      showSnackbar('Your cart is empty');
+      return;
+    }
+
+    dispatch(placeOrder({
+      ...formData,
+      userID: currentUser?.email || 'guest',
+      paymentMethod: selectedValue === 'a' ? 'bank' : "cash",
+      items: cartItems,
+      total: cartItems.reduce((total, item) => total + (item.price * item.quantity), 0)
+    }));
+
+    // Navigate
+    navigate('/OrderConfirmation')
+  }
+
+  if (cartItems.length === 0) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+        <Typography variant="h6">Your cart is empty</Typography>
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -71,7 +170,7 @@ export default function Check() {
         <Typography>/</Typography>
         <Typography
           component={Link}
-          to="/AddtoCart"
+          to="/cart"
           sx={{
             fontSize: "var(--font-sm)",
             opacity: 0.5,
@@ -116,6 +215,9 @@ export default function Check() {
               id="filled-hidden-label-small"
               variant="filled"
               size="small"
+              name="fullName"
+              value={formData.fullName}
+              onChange={HandleInputChange}
               sx={{ width: { xs: "80%", sm: "300px", md: "400px" } }}
             />
           </Box>
@@ -128,6 +230,9 @@ export default function Check() {
               id="filled-hidden-label-small"
               variant="filled"
               size="small"
+              name="companyName"
+              value={formData.companyName}
+              onChange={HandleInputChange}
               sx={{ width: { xs: "80%", sm: "300px", md: "400px" } }}
             />
           </Box>
@@ -143,6 +248,9 @@ export default function Check() {
               id="filled-hidden-label-small"
               variant="filled"
               size="small"
+              name="streetAddress"
+              value={formData.streetAddress}
+              onChange={HandleInputChange}
               sx={{ width: { xs: "80%", sm: "300px", md: "400px" } }}
             />
           </Box>
@@ -157,6 +265,9 @@ export default function Check() {
               id="filled-hidden-label-small"
               variant="filled"
               size="small"
+              name="apartment"
+              value={formData.apartment}
+              onChange={HandleInputChange}
               sx={{ width: { xs: "80%", sm: "300px", md: "400px" } }}
             />
           </Box>
@@ -171,6 +282,9 @@ export default function Check() {
               id="filled-hidden-label-small"
               variant="filled"
               size="small"
+              name="townCity"
+              value={formData.townCity}
+              onChange={HandleInputChange}
               sx={{ width: { xs: "80%", sm: "300px", md: "400px" } }}
             />
           </Box>
@@ -186,6 +300,22 @@ export default function Check() {
               id="filled-hidden-label-small"
               variant="filled"
               size="small"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={(e) => {
+                const cleaned = e.target.value.replace(/\D/g, ' ');
+
+                HandleInputChange({
+                  target: {
+                    name: 'phoneNumber',
+                    value: cleaned
+                  }
+                });
+              }}
+              inputProps={{
+                maxLength: 14,
+                inputMode: 'numeric'
+              }}
               sx={{ width: { xs: "80%", sm: "300px", md: "400px" } }}
             />
           </Box>
@@ -201,6 +331,9 @@ export default function Check() {
               id="filled-hidden-label-small"
               variant="filled"
               size="small"
+              name="emailAddress"
+              value={formData.emailAddress}
+              onChange={HandleInputChange}
               sx={{ width: { xs: "80%", sm: "300px", md: "400px" } }}
             />
           </Box>
@@ -208,6 +341,9 @@ export default function Check() {
           <Box display={"flex"} alignItems={"center"}>
             <Checkbox
               {...label}
+              name="saveInfo"
+              checked={formData.saveInfo}
+              onChange={HandleInputChange}
               sx={{
                 color: "var(--color-danger)", // color when unchecked
                 "&.Mui-checked": {
@@ -228,12 +364,12 @@ export default function Check() {
 
         {/* Product Details */}
         <Box  display={"flex"} flexDirection={"column"} gap={3}>
-          {Product.map((prd, index) => (
+          {cartItems.map((prd, index) => (
             // {/* product 1 */}
             <Box key={index} display={"flex"} alignItems={"center"} justifyContent={"space-between"} gap={20}>
               <Box display={"flex"} alignItems={"center"} gap={3}>
-                <img src={prd.productimg} width={"50px"} height={"40px"}></img>
-                <Typography>{prd.Name}</Typography>
+                <img src={prd.image} width={"50px"} height={"40px"} alt={prd.name}></img>
+                <Typography>{prd.name}</Typography>
               </Box>
               <Box>
                 <Typography>{"$" + prd.price}</Typography>
@@ -245,8 +381,8 @@ export default function Check() {
             <Typography>Subtotal:</Typography>
             <Typography>
               $
-              {Product.reduce(
-                (total, prd) => total + Number(prd.price),
+              {cartItems.reduce(
+                (total, item) => total + (item.price * item.quantity),
                 0
               ).toFixed(2)}
             </Typography>
@@ -266,8 +402,8 @@ export default function Check() {
             <Typography>
               {" "}
               $
-              {Product.reduce(
-                (total, prd) => total + Number(prd.price),
+              {cartItems.reduce(
+                (total, item) => total + (item.price * item.quantity),
                 0
               ).toFixed(2)}{" "}
             </Typography>
@@ -279,8 +415,8 @@ export default function Check() {
               checked={selectedValue === "a"}
               onChange={handleChange}
               value="a"
-              name="radio-buttons"
-              inputProps={{ "aria-label": "A" }}
+              name="paymentMethod"
+              inputProps={{ "aria-label": "Bank payment" }}
               sx={{
                 color: "black", 
                 '&.Mui-checked': {
@@ -302,9 +438,9 @@ export default function Check() {
           {/* Cash Method */}
           <Box display={"flex"} alignItems={"center"} gap={2}>
             <Radio
-              checked={selectedValue === "a"}
+              checked={selectedValue === "b"}
               onChange={handleChange}
-              value="a"
+              value="b"
               name="radio-buttons"
               inputProps={{ "aria-label": "A" }}
               sx={{
@@ -338,6 +474,7 @@ export default function Check() {
             variant="contained"
             sx={{ backgroundColor: "var(--color-danger)", height:"40px",         
            }}
+           onClick={HandleSubmit}
           
           >
             Place Order

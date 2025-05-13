@@ -123,6 +123,7 @@ export default function NewArrival() {
             sx={{
               width: { xs: "200px", md: "400px" },
               height: { xs: "250px", md: "450px" },
+              
             }}
           />
         </Stack>
