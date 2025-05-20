@@ -1,23 +1,26 @@
 import { Box, Button, Grid, IconButton, TextField, Typography } from "@mui/material";
-import React from "react";
+import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import { useSelector , useDispatch } from "react-redux";
 import { UpdateQuantity , RemovefromCart } from "../Utils/itemSlice";
 
+import flashSales from '../Home/FlashSales';
 
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 
-import Remote from "../../images/xremote.png";
-import Keyboard from "../../images/keyboard.png";
-import Lcd from "../../images/LCD.png";
-
-
+import styled from 'styled-components';
 export default function Cart() {
+
+  const flashSalesRef = useRef(null);
+
+  const ScrollToFlashSales = () => {
+    flashSalesRef.current?.ScrollToFlashSales({ behavior: 'smooth' });
+  };
 
   const dispatch = useDispatch();
 
-  const cartItems = useSelector((state) => state.items.cartItems);
+  const cartItems = useSelector((state) => state.items.cartItems || []);
 
   // calculate total
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -79,9 +82,10 @@ export default function Cart() {
       <Grid container mt={8} spacing={2} direction={"column"}  alignItems={"center"}>
           <Grid container item sx={{ fontWeight:600 , textAlign:"center" }}  justifyContent={"center"} >
             {/* Product */}
-            <Grid item xs={12} sm={6} md={2}>
+            <Grid item xs={12} sm={6} md={2}> 
               <Box display="flex" flexDirection="column" gap= {{ xs:5, md: 10 }} alignItems={"center"} mb={{xs: 8 , md:0 }}>
                 <Typography sx={{ fontSize:"var(--font-standard)", fontWeight:"600"}}>Product</Typography>
+                
                 {cartItems.map((item) => (
                   <React.Fragment key={item.id} >
                 <Box
@@ -90,8 +94,8 @@ export default function Cart() {
                   alignItems={"center"}
                   gap={2}
                 >
-                  <img src={item.image} alt={cartItems.name} width={"50px"} height={"40px"}></img>
-                  <Typography> {item.name} </Typography>
+                  <img src={item.image} alt={item.name} width={"50px"} height={"40px"}></img>
+                  <Typography > {item.name} </Typography>
                 </Box>
                 </React.Fragment>
                ))}
@@ -99,10 +103,10 @@ export default function Cart() {
             </Grid>
             {/* Price */}
             <Grid item xs={12} sm={6}  md={2}>
-              <Box display={"flex"} flexDirection={"column"}  gap={{ xs: 5, md: 11.5 }} textAlign={"center"} mb={{xs: 8 , md:0 }}>
+              <Box display={"flex"} flexDirection={"column"}  gap={{ xs: 5, md: 12.5 }} textAlign={"center"} mb={{xs: 8 , md:0 }}>
                 <Typography sx={{ fontSize:"var(--font-standard)", fontWeight:"600"}}>Price</Typography>
                 {cartItems.map((item) => (
-                <Typography> ${item.price} </Typography>
+                <Typography key={`price-${item.id}`}> ${item.price} </Typography>
                 ))}
               </Box>
             </Grid>
@@ -135,16 +139,17 @@ export default function Cart() {
             </Grid>
             {/* Subtotal */}
             <Grid item xs={12} sm={6}  md={2}>
-              <Box display={"flex"} flexDirection={"column"} gap={ { xs:5, md:11.5 }} textAlign={"center"} mb={{xs: 8 , md:0 }}>
+              <Box display={"flex"} flexDirection={"column"} gap={ { xs:5, md:12.5 }} textAlign={"center"} mb={{xs: 8 , md:0 }}>
                 <Typography sx={{ fontSize:"var(--font-standard)", fontWeight:"600"}}>Subtotal</Typography>
                 {cartItems.map((item) => (
-                <Typography>$  {item.price * item.quantity}  </Typography>
+                <Typography key={item.id}> ${item.price * item.quantity} </Typography>
+
               ))}
               </Box>
             </Grid>
                 {/* Delete Icon */}
                 <Grid item xs={12} sm={6}  md={2}>
-              <Box display={"flex"} flexDirection={"column"} gap={{ xs:5, md : 11.5 }} >
+              <Box display={"flex"} flexDirection={"column"} gap={{ xs:5, md : 10.7 }} >
               <Typography sx={{  fontSize:"var(--font-standard)", fontWeight:"600"}}>Remove</Typography>
                 {cartItems.map((item) => (
               <IconButton color="error" onClick={() => dispatch(RemovefromCart (item.id))}   >
@@ -204,18 +209,14 @@ export default function Cart() {
       >
       {/* Coupan  */}
         <Box display={"flex"} flexDirection={{ xs:"column" , md:"row"}} gap={4} >
-          <TextField size="small" defaultValue={"Coupan Code"} sx={{          
+          <TextField size="small" placeholder={"Coupan Code"} sx={{          
             mx: {xs:3 , md:0} }}>
             Caupon Code
           </TextField>
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: "var(--color-danger)", height:"40px",         
-            mx:{xs:3 , md:0} }}
-          
-          >
-            Apply Coupon
-          </Button>
+   
+               <StyledCoupin>
+              <button className="button">Apply Coupon</button>
+            </StyledCoupin>
         </Box>
         {/* Card Total */}
         <Box
@@ -227,7 +228,7 @@ export default function Cart() {
           mt={{ xs:4, md:0}}
           p={2}
         >
-          <Typography>Card Total</Typography>
+          <Typography>Cart Total</Typography>
           <Box display={"flex"} justifyContent={"space-between"}>
             <Typography>Subtotal:</Typography>
             <Typography>${subtotal}</Typography>
@@ -242,7 +243,10 @@ export default function Cart() {
             <Typography>Total:</Typography>
             <Typography>${subtotal}</Typography>
           </Box>
-          <Button onClick={HandleCheckout} variant="contained"  sx={{ backgroundColor:"var(--color-danger)" , width:"250px", mx:"auto"}} >Process To Checkout</Button>
+          {/* <Button onClick={HandleCheckout} variant="contained"  sx={{ backgroundColor:"var(--color-danger)" , width:"250px", mx:"auto"}} >Process To Checkout</Button> */}
+              <StyledWrapper>
+      <button onClick={HandleCheckout}>Process to Checkout</button>
+    </StyledWrapper>
         </Box>
       </Box>
 
@@ -252,3 +256,152 @@ export default function Cart() {
     </>
   );
 }
+
+
+
+const StyledWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    height: 2.5em;
+    width: 12em;
+    background: transparent;
+    -webkit-animation: jello-horizontal 0.9s both;
+    animation: jello-horizontal 0.9s both;
+    border: 2px solid var(--color-danger);
+    outline: none;
+    color: var(--color-danger);
+    cursor: pointer;
+    font-size: 17px;
+  }
+
+  button:hover {
+    background: var(--color-danger);
+    color: #ffffff;
+    animation: squeeze3124 0.9s both;
+  }
+
+  @keyframes squeeze3124 {
+    0% {
+      transform: scale3d(1, 1, 1);
+    }
+    30% {
+      transform: scale3d(1.25, 0.75, 1);
+    }
+    40% {
+      transform: scale3d(0.75, 1.25, 1);
+    }
+    50% {
+      transform: scale3d(1.15, 0.85, 1);
+    }
+    65% {
+      transform: scale3d(0.95, 1.05, 1);
+    }
+    75% {
+      transform: scale3d(1.05, 0.95, 1);
+    }
+    100% {
+      transform: scale3d(1, 1, 1);
+    }
+  }
+`;
+
+
+
+const StyledCoupin = styled.div`
+  .button {
+    position: relative;
+    padding: 12px 22px;
+    border-radius: 6px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    background-color: var(--color-danger);
+    transition: all 0.2s ease;
+  }
+
+  .button:active {
+    transform: scale(0.96);
+  }
+
+  .button:before,
+  .button:after {
+    position: absolute;
+    content: "";
+    width: 150%;
+    left: 50%;
+    height: 100%;
+    transform: translateX(-50%);
+    z-index: -1000;
+    background-repeat: no-repeat;
+  }
+
+  .button:hover:before {
+    top: -70%;
+    background-image: radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle, transparent 20%, var(--color-danger) 20%, transparent 30%),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle, transparent 10%, var(--color-danger) 15%, transparent 20%),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%);
+    background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%,
+      10% 10%, 18% 18%;
+    background-position: 50% 120%;
+    animation: greentopBubbles 0.6s ease;
+  }
+
+  @keyframes greentopBubbles {
+    0% {
+      background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%,
+        40% 90%, 55% 90%, 70% 90%;
+    }
+
+    50% {
+      background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%,
+        50% 50%, 65% 20%, 90% 30%;
+    }
+
+    100% {
+      background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%,
+        50% 40%, 65% 10%, 90% 20%;
+      background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+    }
+  }
+
+  .button:hover::after {
+    bottom: -70%;
+    background-image: radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle, transparent 10%, var(--color-danger) 15%, transparent 20%),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle,var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle,var(--color-danger) 20%, transparent 20%);
+    background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%, 18% 18%;
+    background-position: 50% 0%;
+    animation: greenbottomBubbles 0.6s ease;
+  }
+
+  @keyframes greenbottomBubbles {
+    0% {
+      background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%,
+        70% -10%, 70% 0%;
+    }
+
+    50% {
+      background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%,
+        105% 0%;
+    }
+  
+    100% {
+      background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%,
+        110% 10%;
+      background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+    }
+  }`;
+

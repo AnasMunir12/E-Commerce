@@ -11,116 +11,128 @@ import {
   Grid,
   CircularProgress,
 } from "@mui/material";
-import { DotLoader } from "react-spinners";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import Remote from "../../images/xremote.png";
-import Keyboard from "../../images/keyboard.png";
-import Lcd from "../../images/LCD.png";
-
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 
-const ProductDt = () => {
-  const { id } = useParams();
+import Coat from "../../images/coat.png";
+import Bag from "../../images/duffle_bag.png";
+import Cpu from "../../images/rgbcpu.png";
+import Shelf from "../../images/bookshelf.png";
+
+import { DotLoader } from "react-spinners";
+
+export default function SellingProductDT() {
   const navigate = useNavigate();
+
+  const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [rating, setRating] = useState(3);
 
-
   const [counter, setCounter] = useState(1);
 
-  const HandleIncrease = ( ) => {
-    setCounter(prev => prev + 1);
+  const HandleIncrease = () => {
+    setCounter((prev) => prev + 1);
   };
-  const HandleDecrease = ( ) => {
+  const HandleDecrease = () => {
     if (counter > 1) {
-    setCounter(prev => prev - 1);
+      setCounter((prev) => prev - 1);
+    }
   };
-};
 
-  // Mock data - in a real app you'd fetch this from an API
-  const products = [
+  const sellingProduct = [
     {
-      id: "flash-1",
-      img: Remote,
-      name: "HAVIT HV-G92 Gamepad",
-      price: 120,
-      discount: "-40%",
+id:"sell-1",
+      img: Coat,
+      name: "The North Coat",
+      price: 260,
       description:
-        "High-quality gaming gamepad with ergonomic design and responsive buttons.",
+        "Premium winter coat made from high-quality wool and insulated lining for maximum warmth and style.",
       features: [
-        "Wireless connectivity",
-        "Dual vibration feedback",
-        "10-hour battery life",
-        "Compatible with PC/PS4/Xbox",
+        "Water-resistant fabric",
+        "Adjustable hood",
+        "Zipper and button closure",
+        "Two front pockets",
       ],
-      stock: 15,
-      rating: 4, // Added rating to product data
+      stock: 12,
+      rating: 4.5,
     },
     {
-      id: "flash-2",
-      img: Keyboard,
-      name: "AK-900 Wired Keyboard",
+      id: "sell-2",
+      img: Bag,
+      name: "Gucci Duffle Bag",
       price: 960,
-      discount: "-20%",
       description:
-        "Mechanical wired keyboard with RGB backlighting and anti-ghosting.",
+        "Luxury designer duffle bag perfect for travel or weekend getaways. Made with genuine leather.",
       features: [
-        "Cherry MX switches",
-        "RGB backlighting",
-        "N-key rollover",
-        "Aluminum frame",
-      ],
-      stock: 8,
-      rating: 5,
-    },
-    {
-      id: "flash-3",
-      img: Lcd,
-      name: "IPS LCD Gaming Monitor",
-      price: 370,
-      discount: "-10%",
-      description:
-        "27-inch IPS gaming monitor with 144Hz refresh rate and 1ms response time.",
-      features: [
-        "2560x1440 resolution",
-        "HDR support",
-        "AMD FreeSync",
-        "Adjustable stand",
+        "100% genuine leather",
+        "Detachable shoulder strap",
+        "Zipper closure",
+        "Logo embossed hardware",
       ],
       stock: 5,
-      rating: 4,
+      rating: 4.8,
+    },
+    {
+      id: "sell-3",
+      img: Cpu,
+      name: "RGB Liquid CPU Cooler",
+      price: 160,
+      description:
+        "Efficient all-in-one liquid cooling system with customizable RGB lighting for high-performance CPUs.",
+      features: [
+        "Supports Intel & AMD sockets",
+        "RGB LED pump and fans",
+        "High-efficiency cooling plate",
+        "Ultra-quiet operation",
+      ],
+      stock: 20,
+      rating: 4.3,
+    },
+    {
+      id: "sell-4",
+      img: Shelf,
+      name: "Small BookShelf",
+      price: 360,
+      description:
+        "Modern small bookshelf made from engineered wood, ideal for home or office organization.",
+      features: [
+        "3-tier open shelf",
+        "Scratch-resistant surface",
+        "Compact and durable design",
+        "Easy to assemble",
+      ],
+      stock: 15,
+      rating: 4.1,
     },
   ];
 
   useEffect(() => {
-    // Simulate API loading
     const timer = setTimeout(() => {
       try {
-        const foundProduct = products.find((p) => p.id === id);
+        const foundProduct = sellingProduct.find((p) => p.id === id);
         if (!foundProduct) {
-          throw new Error("Product not found");
+          throw new Error("Product not Found");
         }
         setProduct(foundProduct);
-        setRating(foundProduct.rating); // Set initial rating from product data
+        setRating(foundProduct.rating);
         setError(null);
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
-    }, 500); // Simulate network delay
-
+    }, 500);
     return () => clearTimeout(timer);
   }, [id]);
 
   if (loading) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-    <DotLoader color="var(--color-danger)" />
+        <DotLoader color="var(--color-danger)" />
       </Box>
     );
   }
@@ -138,12 +150,6 @@ const ProductDt = () => {
     );
   }
 
-    
-
-
-
-
-
   return (
     <Box sx={{ p: 4 }}>
       <IconButton onClick={() => navigate(-1)} sx={{ mb: 2 }}>
@@ -159,12 +165,11 @@ const ProductDt = () => {
               bgcolor: "var(--success-bg)",
               borderRadius: 2,
               Width: "100%",
-              height:"80%"
-              
+              height: "80%",
             }}
           >
             <Box
-            component="img"
+              component="img"
               src={product.img}
               alt={product.name}
               sx={{
@@ -199,7 +204,7 @@ const ProductDt = () => {
               <Typography variant="h5" color="error">
                 ${product.price}
               </Typography>
-              <Typography
+              {/* <Typography
                 sx={{
                   textDecoration: "line-through",
                   color: "text.secondary",
@@ -219,7 +224,7 @@ const ProductDt = () => {
                 }}
               >
                 {product.discount}
-              </Typography>
+              </Typography> */}
             </Stack>
 
             <Typography variant="body1" paragraph>
@@ -250,52 +255,57 @@ const ProductDt = () => {
               ))}
             </Box>
 
-            <Box display={"flex"} flexDirection= {{  xs:"column" , md: "row"}} gap={2} sx={{ mt: 2 }}>
+            <Box
+              display={"flex"}
+              flexDirection={{ xs: "column", md: "row" }}
+              gap={2}
+              sx={{ mt: 2 }}
+            >
               <Box display={"flex"} flexDirection={"row"} alignItems={"center"}>
                 <Box sx={{ border: "1px solid #00000080" }}>
-                  <IconButton  onClick={HandleDecrease} sx={{ color:"black"}}>
+                  <IconButton onClick={HandleDecrease} sx={{ color: "black" }}>
                     <RemoveIcon />
                   </IconButton>
-                </Box >
-                <Box sx={{ border: "1px solid #00000080", height:40 }}>
-                  <Typography sx={{ fontSize:"var(--font-standard)" , px:4}} > {counter} </Typography>
+                </Box>
+                <Box sx={{ border: "1px solid #00000080", height: 40 }}>
+                  <Typography sx={{ fontSize: "var(--font-standard)", px: 4 }}>
+                    {" "}
+                    {counter}{" "}
+                  </Typography>
                 </Box>
                 <Box sx={{ border: "1px solid #00000080" }}>
-                  <IconButton onClick={HandleIncrease} sx={{ color:"black"}}>
+                  <IconButton onClick={HandleIncrease} sx={{ color: "black" }}>
                     <AddIcon />
                   </IconButton>
                 </Box>
               </Box>
-              <Box display={"flex"} flexDirection={"row"} gap={2} >
-               <Button
-                variant="contained"
-                color="error"
-                sx={{ px: 4, py: 1.5 }}
-                size="large"
-              >
-                Buy Now
-              </Button>
-              <IconButton
-                sx={{
-                  border: "1px solid",
-                  borderColor: "divider",
-                  "&:hover": {
-                    color: "error.main",
-                    borderColor: "error.main",
-                  },
-                }}
-                size="large"
-              >
-                <FavoriteBorderOutlinedIcon />
-              </IconButton>
+              <Box display={"flex"} flexDirection={"row"} gap={2}>
+                <Button
+                  variant="contained"
+                  color="error"
+                  sx={{ px: 4, py: 1.5 }}
+                  size="large"
+                >
+                  Buy Now
+                </Button>
+                <IconButton
+                  sx={{
+                    border: "1px solid",
+                    borderColor: "divider",
+                    "&:hover": {
+                      color: "error.main",
+                      borderColor: "error.main",
+                    },
+                  }}
+                  size="large"
+                >
+                  <FavoriteBorderOutlinedIcon />
+                </IconButton>
               </Box>
-
             </Box>
           </Stack>
         </Grid>
       </Grid>
     </Box>
   );
-};
-
-export default ProductDt;
+}

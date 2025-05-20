@@ -18,7 +18,7 @@ export default function Contactmain() {
   return (
     <>
       {/* Links  */}
-      <Box display="flex" alignItems="center" gap={1.5} mt={8} px={6}>
+      <Box display="flex" alignItems="center" gap={1.5} mt={8} px={{ xs:2, md:6 }}>
         <Typography
           component={Link}
           to="/"
@@ -27,6 +27,7 @@ export default function Contactmain() {
             opacity: 0.5,
             textDecoration: "none",
             color: "black",
+        
           }}
         >
           Home
@@ -62,13 +63,13 @@ export default function Contactmain() {
             <IconButton sx={{ background:"var(--color-danger)", color:"white"}}>
               <MailOutlineOutlinedIcon />
             </IconButton>
-            <Typography sx={{fontFamily:"var( --font-family-primary)", fontSize:"var(--font-sm)", mt:2}}>Write to US</Typography>
+            <Typography sx={{fontFamily:"var( --font-family-primary)", fontSize:"var(--font-sm)"}}>Write to US</Typography>
           </Box>
           <Typography sx={{fontFamily:"var( --font-family-primary)", fontSize:"var(--font-sm)", mt:2}}>
             Fill out our form and we will contact <br /> you within 24 hours.
           </Typography>
-          <Typography sx={{fontFamily:"var( --font-family-primary)", fontSize:"var(--font-sm)", mt:2}}>Email: anassheik890@gmail.com</Typography>
-          <Typography sx={{fontFamily:"var( --font-family-primary)", fontSize:"var(--font-sm)", mt:2}}>Email: support@exclusive.com</Typography>
+          <Typography sx={{fontFamily:"var( --font-family-primary)", fontSize:"var(--font-sm)", mt:2}}> <strong> Email: </strong> anassheik890@gmail.com</Typography>
+          <Typography sx={{fontFamily:"var( --font-family-primary)", fontSize:"var(--font-sm)", mt:2}}> <strong> Email: </strong> support@exclusive.com</Typography>
         </Box>
 
         {/* Right Side of Contact */}

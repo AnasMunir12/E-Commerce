@@ -12,6 +12,8 @@ import ScrollToTop from './Components/ScrollToTop'
 import AddtoCart from './Pages/AddtoCart'
 import Checkout from './Pages/Checkout'
 import ConfirmOrder from './Pages/ConfirmOrder'
+import SellingProductDT from './Components/Productdetail/SellingProductDT'
+import ExploreDT from './Components/Productdetail/ExploreDT'
 // import EmailVerification from './Components/Signup/EmailVerfication'
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/product/:id' element={<ProductDt />} />
+        <Route path='/selling_product/:id' element={<SellingProductDT />} />
+        <Route path='/explore_product/:id' element={<ExploreDT />} />
         <Route path='/cart' element={<AddtoCart />} />
         <Route path='/checkout' element={<Checkout />} />
         <Route path='/orderConfirmation' element={<ConfirmOrder />} />

@@ -19,34 +19,36 @@ import { Link } from "react-router-dom"; // ✅ Correct
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
+import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+
+import logo from "../../images/E_logo.png";
 
 import UserMenu from "./UserMenu";
 
-import { useDispatch , useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../Utils/itemSlice";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 export default function Navbar() {
-const dispatch = useDispatch( );
-const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-const user = useSelector(state => state.items.currentUser);
+  const user = useSelector((state) => state.items.currentUser);
 
-const HandleLogout = () => {
-  dispatch(logout());
-  navigate("/login")
-}
-const [UserMenuAnchor , setUserMenuAnchor] = useState(null);
+  const HandleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
+  const [UserMenuAnchor, setUserMenuAnchor] = useState(null);
 
-const handleUserMenuOpen = (event) => {
-  setUserMenuAnchor(event.currentTarget);
-};
+  const handleUserMenuOpen = (event) => {
+    setUserMenuAnchor(event.currentTarget);
+  };
 
-const handleUserMenuClose = () => {
-  setUserMenuAnchor(null);
-};
+  const handleUserMenuClose = () => {
+    setUserMenuAnchor(null);
+  };
 
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.down("md"));
@@ -59,19 +61,18 @@ const handleUserMenuClose = () => {
     { name: "Home", path: "/" },
     { name: "Contact", path: "/contact" },
     { name: "About", path: "/about" },
-    { name: "Login", path: "/login" },
+    ...(user ? []  : [{ name: "Login", path: "/login" }]),
   ];
 
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
   };
 
-    const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(false);
 
-    const Handleclicked  = () => {
-      setLiked(!liked);
-    }
-
+  const Handleclicked = () => {
+    setLiked(!liked);
+  };
 
   return (
     <>
@@ -81,20 +82,32 @@ const handleUserMenuClose = () => {
           alignItems={"center"}
           justifyContent={"space-evenly"}
         >
-          <Link to={"/"} style={{ textDecoration: "none" }}>
-            <Typography
-              variant="h6"
-                  sx={{
-                    fontWeight: 700,
-                    color: "black", // optional: ensure color stays consistent
-                    "&:hover": {
-                      color: "var(--color-danger)", // optional hover effect
-                    },
-                  }}
-            >
-              Exclusive
-            </Typography>
-          </Link>
+          <Box display={"flex"} alignItems={"center"} gap={1}>
+            <Box
+              component="img"
+              src={logo}
+              alt="Logo"
+              sx={{
+                width: "40px",
+                height: "40px",
+              }}
+            />
+            <Link to={"/"} style={{ textDecoration: "none" }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  display: { xs: "none", md: "flow" },
+                  fontWeight: 700,
+                  color: "black",
+                  "&:hover": {
+                    color: "var(--color-danger)",
+                  },
+                }}
+              >
+                Exclusive
+              </Typography>
+            </Link>
+          </Box>
           {!isSmall && (
             <Stack direction="row" spacing={4}>
               {navLinks.map((link, index) => (
@@ -185,26 +198,29 @@ const handleUserMenuClose = () => {
         )} */}
 
             <IconButton onClick={Handleclicked}>
-              { liked ? (
-
-              <FavoriteOutlinedIcon fontSize="small"  style={{ color:"var(--color-danger)"}}/> ) : ( 
-              <FavoriteBorderOutlinedIcon fontSize="small" />
-            )}
-              </IconButton>
+              {liked ? (
+                <FavoriteOutlinedIcon
+                  fontSize="small"
+                  style={{ color: "var(--color-danger)" }}
+                />
+              ) : (
+                <FavoriteBorderOutlinedIcon fontSize="small" />
+              )}
+            </IconButton>
 
             <IconButton>
               <ShoppingCartOutlinedIcon fontSize="small" />
             </IconButton>
 
             <IconButton onClick={handleUserMenuOpen}>
-              <AccountCircleOutlinedIcon fontSize="small"/>
+              <AccountCircleOutlinedIcon fontSize="small" />
             </IconButton>
-            <UserMenu 
-            anchorEl={UserMenuAnchor}
-            open={Boolean(UserMenuAnchor)}
-            onClose={handleUserMenuClose}
-            HandleLogout={HandleLogout}
-            user={user}
+            <UserMenu
+              anchorEl={UserMenuAnchor}
+              open={Boolean(UserMenuAnchor)}
+              onClose={handleUserMenuClose}
+              HandleLogout={HandleLogout}
+              user={user}
             />
 
             {isSmall && (
@@ -218,8 +234,12 @@ const handleUserMenuClose = () => {
 
       <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
         <Box width={250} p={2}>
-          <Typography variant="h6" gutterBottom>
-            Menu
+          <Typography
+            variant="h6"
+            gutterBottom
+            sx={{ fontWeight: 700, color: "black" }}
+          >
+            Exclusive
           </Typography>
 
           {/* Search Input inside Drawer for small screens */}

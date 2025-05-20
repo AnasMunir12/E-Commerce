@@ -8,8 +8,14 @@ import Shelf from "../../images/bookshelf.png";
 
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+
 
 import styled from "styled-components";  
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {  addToProduct } from "../Utils/itemSlice";
+
 
 
 const ProductCard = styled(Stack)`
@@ -56,11 +62,17 @@ const AnimatedRating = styled(Rating)`
 `;
 
 export default function Sellingproduct() {
+
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.items.cartItems);  // get item from redux
+  console.log("Items" , cartItems);
+    const navigate = useNavigate();
+  
   const SellingProductData = [
-    { img: Coat, name: "The north coat", price: 260 },
-    { img: Bag, name: "Gucci duffle bag", price: 960 },
-    { img: Cpu, name: "RGB liquid CPU Cooler", price: 160 },
-    { img: Shelf, name: "Small BookShelf", price: 360 },
+    { id:"sell-1",  img: Coat, name: "The north coat", price: 260 },
+    { id:"sell-2" , img: Bag, name: "Gucci duffle bag", price: 960 },
+    {  id:"sell-3", img: Cpu, name: "RGB liquid CPU Cooler", price: 160 },
+    { id:"sell-4", img: Shelf, name: "Small BookShelf", price: 360 },
   ];
 
   const [rating, setRating] = useState(Array(SellingProductData.length).fill(3));
@@ -109,10 +121,10 @@ export default function Sellingproduct() {
 
         <Grid container display={"flex"} direction={"row"} justifyContent={"center"} maxWidth={"lg"}  mt={3} mx={"auto"} gap={10}>
         {SellingProductData.map((Sell, index) => (
-          <Grid key={index} item  xs={12} sm={4} md={3} lg={2}  display={"flex"} justifyContent={"center"}  >
+          <Grid key={Sell.id} item  xs={12} sm={4} md={3} lg={2}  display={"flex"} justifyContent={"center"}  >
             <Box >
             {/* Product Card */}
-            <ProductCard >
+            <ProductCard key={index} onClick={() => navigate(`/selling_product/${Sell.id}`)}  sx={{ cursor: "pointer" }} >
               <Stack direction={"row"} justifyContent={"space-between"} width={"100%"}>
                 <Stack display={"flex"} direction={"column"} justifyContent={"start"}>
                   <IconButtonStyled>
@@ -134,6 +146,47 @@ export default function Sellingproduct() {
                 <img src={Sell.img} alt={Sell.name} style={{ maxWidth: "100%", maxHeight: "100%" }} />
               </Stack>
             </ProductCard>
+              {/* Add to card Button */}
+                  <Box
+                    component={"button"}
+                    onClick={() => {
+                      console.log("Dispatching:", {
+                        // Debug log
+                        name: Sell.name,
+                        price: Sell.price,
+                        image: Sell.img,
+                        id: Sell.id,
+                      });
+                      dispatch(
+                        addToProduct({
+                          id: Sell?.id,
+                          name: Sell?.name,
+                          price: Sell?.price,
+                          image: Sell?.img,
+                        })
+                      );
+                      navigate("/cart");
+                    }}
+                    display={"flex"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    sx={{
+                      backgroundColor: "black", // Fixed black background
+                      borderRadius: "0 0 4px 4px",
+                      color: "white", // White text
+                      padding: "6px 12px",
+                      spacing: 2,
+                      gap: 1,
+                      width: "245px",
+                      margin: "0 auto",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <IconButton sx={{ color: "white" }}>
+                      <ShoppingCartOutlinedIcon />
+                    </IconButton>
+                    <Typography>Add to Cart</Typography>
+                  </Box>
             
             {/* Product Info */}
             <Typography sx={{ fontWeight: 500, mt: 2 }}>{Sell.name}</Typography>

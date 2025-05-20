@@ -10,9 +10,16 @@ import React, { useState } from "react";
 
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+
 
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import { useNavigate } from "react-router-dom";
+
+import { useDispatch, useSelector } from "react-redux";
+import {  addToProduct } from "../Utils/itemSlice";
+
 
 import Dogfood from "../../images/Explore/Dogfood.png";
 import Dslr from "../../images/Explore/camera.png";
@@ -82,17 +89,26 @@ const AnimatedRating = styled(Rating)`
 `;
 
 export default function ExploreProducts() {
+
+    const dispatch = useDispatch(); // when I have to store  item
+    const cartItems = useSelector((state) => state.items.cartItems); // when I get the item
+    console.log("Items Data", cartItems);
+
+      const navigate = useNavigate();
+
+      
+  
   const [ showall , setShowall ]=useState(false);
 
   const ExploreProductData = [
-    { img: Dogfood, name: "The north coat", price: 260 },
-    { img: Dslr, name: "Gucci duffle bag", price: 960 },
-    { img: Laptop, name: "RGB liquid CPU Cooler", price: 160 },
-    { img: Curulogy, name: "Small BookShelf", price: 360 },
-    { img: Car, name: "Small BookShelf", price: 360 },
-    { img: Soccershoes, name: "Small BookShelf", price: 360 },
-    { img: Xremote, name: "Small BookShelf", price: 360 },
-    { img: Jacket, name: "Small BookShelf", price: 360 },
+    { id: "explore_1", img: Dogfood, name: "Breed Dry Dog Food", price: 100 },
+    { id: "explore_2",img: Dslr, name: "CANON EOS DSLR Camera", price: 360 },
+    { id: "explore_3",img: Laptop, name: "ASUS FHD Gaming Laptop", price: 700 },
+    { id: "explore_4",img: Curulogy, name: "Curology Product Set ", price: 500 },
+    { id: "explore_5",img: Car, name: "Kids Electric Car", price: 960 },
+    { id: "explore_6",img: Soccershoes, name: "Jr. Zoom Soccer Cleats", price: 1160 },
+    { id: "explore_7",img: Xremote, name: "GP11 Shooter USB Gamepad", price: 860 },
+    { id: "explore_8",img: Jacket, name: "Quilted Satin Jacket", price: 200 },
   ];
 
   const [rating, setRating] = useState(
@@ -142,9 +158,9 @@ export default function ExploreProducts() {
  
       </Stack>
 
-      <Stack alignItems="center" justifyContent="center" width="100%">
+      <Box display={"flex"} alignItems="center" justifyContent="center" width="100%"  mx={"auto"}>
         <AnimatedGridWrapper show={showall}>
-        <Grid
+        <Grid 
           container
           justifyContent={"center"}
           spacing={4}
@@ -155,7 +171,7 @@ export default function ExploreProducts() {
             <Grid item xs={12} sm={6} md={4} lg={3}  key={index} display={"flex"} justifyContent={"center"}>
               <Box>
               {/* Product Card */}
-              <ProductCard>
+              <ProductCard  onClick={() => navigate(`/explore_product/${Explore.id}`)}  sx={{ cursor: "pointer" }}>
                 <Stack
                   direction={"row"}
                   justifyContent={"space-between"}
@@ -175,16 +191,57 @@ export default function ExploreProducts() {
                   height={"140px"}
                   alignItems={"center"}
                   justifyContent={"center"}
-                  mt={-5}
+                mt={{ xs: 0, sm: -3, md: -5 }}
                   sx={{ cursor: "pointer" }}
                 >
                   <img
                     src={Explore.img}
                     alt={Explore.name}
-                    style={{ maxWidth: "100%", maxHeight: "100%" }}
+                    style={{ maxWidth: "100%", maxHeight: "100%" , objectFit:"contain"}}
                   />
                 </Stack>
               </ProductCard>
+                            {/* Add to card Button */}
+                                <Box
+                                  component={"button"}
+                                  onClick={() => {
+                                    console.log("Dispatching:", {
+                                      // Debug log
+                                      name: Explore.name,
+                                      price: Explore.price,
+                                      image: Explore.img,
+                                      id: Explore.id,
+                                    });
+                                    dispatch(
+                                      addToProduct({
+                                        id: Explore?.id,
+                                        name: Explore?.name,
+                                        price: Explore?.price,
+                                        image: Explore?.img,
+                                      })
+                                    );
+                                    navigate("/cart");
+                                  }}
+                                  display={"flex"}
+                                  alignItems={"center"}
+                                  justifyContent={"center"}
+                                  sx={{
+                                    backgroundColor: "black", // Fixed black background
+                                    borderRadius: "0 0 4px 4px",
+                                    color: "white", // White text
+                                    padding: "6px 12px",
+                                    spacing: 2,
+                                    gap: 1,
+                                    width: "245px",
+                                    margin: "0 auto",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  <IconButton sx={{ color: "white" }}>
+                                    <ShoppingCartOutlinedIcon />
+                                  </IconButton>
+                                  <Typography>Add to Cart</Typography>
+                                </Box>
 
               {/* Product Info */}
               <Typography sx={{ fontWeight: 500, mt: 2 }}>
@@ -215,9 +272,9 @@ export default function ExploreProducts() {
           ))}
         </Grid>
         </AnimatedGridWrapper>
-      </Stack>
+      </Box>
 
-      <Stack direction={"row"} justifyContent={"center"} mt={"40px"}>
+      <Stack width="100%" mt={"40px"} alignItems="center">
         <StyledWrapper>
           <button onClick={() => setShowall(!showall)}>
             <span>{ showall ? "View Less" : "View All Products" }</span>
@@ -230,23 +287,25 @@ export default function ExploreProducts() {
 
 
 const AnimatedGridWrapper = styled.div`
-  overflow: hidden;
-  transition: max-height 0.6s ease, opacity 0.6s ease;
-  max-height: ${({ show }) => (show ? "2000px" : "600px")};
-  opacity: ${({ show }) => (show ? 1 : 1)};
+  transition: opacity 0.6s ease-in-out, transform 0.4s ease;
+  opacity: ${({ show }) => (show ? 1 : 0.7)};
+  transform: ${({ show }) => (show ? "scale(1)" : "scale(0.98)")};
 `;
 
 
+
 const StyledWrapper = styled.div`
+ width: 100%;
+  display: flex;
+  justify-content: center;
+
+
   button {
     position: relative;
     margin: 0;
     padding: 12px 42px;
     outline: none;
     text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     cursor: pointer;
     border: none;
     text-transform: capitalize;
@@ -260,6 +319,7 @@ const StyledWrapper = styled.div`
     overflow: hidden;
     transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
   }
+
 
   button:hover {
     animation: sh0 0.5s ease-in-out both;

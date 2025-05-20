@@ -7,6 +7,8 @@ import HashLoader from "react-spinners/HashLoader";
 import Loginimg from "../../images/LoginSignup.png";
 import googlleicon from "../../images/google.png";
 
+import { useDispatch } from "react-redux";
+import { setUser } from "../Utils/itemSlice"; 
 
 
 export default function Login() {
@@ -18,9 +20,11 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   
   useEffect(() => {
-  const userInfo = localStorage.getItem("userInfo");
+  const userInfo = localStorage.getItem("UserInfo");
   if (userInfo) navigate("/");
 }, [navigate]);
 
@@ -37,7 +41,8 @@ export default function Login() {
         email,
         password,
       });
-      localStorage.setItem("User info" ,  JSON.stringify(data))
+      dispatch(setUser(data));
+      localStorage.setItem("UserInfo" ,  JSON.stringify(data))
 
       setSnackMsg("Login successful!");
       setSnackSeverity("success");

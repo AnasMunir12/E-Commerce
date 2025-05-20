@@ -22,6 +22,9 @@ import Linkdinicon from "../../images/linkedinIcon.png";
 import Twitttericon from "../../images/twitterIcon.png";
 import CloseIcon from "@mui/icons-material/Close";
 
+import logo from '../../images/E_logo.png'
+
+
 export default function Footer() {
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogContent, setDialogContent] = useState("");
@@ -100,6 +103,7 @@ Q: How can I search for items?\nA: Use the search bar to filter by category or n
 
   return (
     <>
+    <Box sx={{ mt:5}}></Box>
       <Dialog
         open={openDialog}
         onClose={() => setOpenDialog(false)}
@@ -140,9 +144,12 @@ Q: How can I search for items?\nA: Use the search bar to filter by category or n
           {/* Subscribe Section */}
           <Box sx={{ width: { xs: "100%", sm: "48%", md: "19%" }, mb: 4 }}>
             <Stack gap="16px">
+              <Box>
+                {/* <img src={logo} alt="Logo" width= {{ xs:"20px", md: "40px" }}  height={{ xs:"20px", md: "40px" }} /> */}
               <Link to={"/"}>
                 <Typography sx={styles.heading}>Exclusive </Typography>
               </Link>
+              </Box>
               <Link>
                 <Typography sx={styles.linkheading}>Subscribe </Typography>
               </Link>

@@ -1,22 +1,23 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { Link , useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import Checkbox from "@mui/material/Checkbox";
 import Radio from "@mui/material/Radio";
 
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
+import styled from "styled-components";
 
 import Remote from "../../images/xremote.png";
 import Keyboard from "../../images/keyboard.png";
 import Lcd from "../../images/LCD.png";
 
-import PayPal from '../../images/paypal.png'
-import MasterCard from '../../images/MasterCard.png'
-import Visa from '../../images/visa.png'
+import PayPal from "../../images/paypal.png";
+import MasterCard from "../../images/MasterCard.png";
+import Visa from "../../images/visa.png";
 import { placeOrder } from "../Utils/itemSlice";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
@@ -27,99 +28,115 @@ export default function Check() {
 
   const [snackbar, setSnackbar] = useState({
     open: false,
-    message: '',
-    severity: 'error', // can be 'success', 'info', 'warning'
+    message: "",
+    severity: "error", // can be 'success', 'info', 'warning'
   });
 
-  const showSnackbar = (message, severity = 'error') => {
+  const showSnackbar = (message, severity = "error") => {
     setSnackbar({ open: true, message, severity });
   };
-  
-  const dispatch = useDispatch();
- const navigate = useNavigate();
 
-  const cartItems = useSelector((state) => state.items.cartItems );
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const cartItems = useSelector((state) => state.items.cartItems);
   const currentUser = useSelector((state) => state.items.currentUser);
 
   const [selectedValue, setSelectedValue] = React.useState("a");
-  const [formData , setFormData] = useState({
-    fullName: '',
-  companyName: '',
-  streetAddress: '',
-  apartment: '',
-  townCity: '',
-  phoneNumber: '',
-  emailAddress: currentUser?.email || '',
-  saveInfo: false,
-  paymentMethod: 'bank',
+  const [formData, setFormData] = useState({
+    fullName: "",
+    companyName: "",
+    streetAddress: "",
+    apartment: "",
+    townCity: "",
+    phoneNumber: "",
+    emailAddress: currentUser?.email || "",
+    saveInfo: false,
+    paymentMethod: "bank",
   });
 
   // Phone number formatting function
-const formatPhoneNumber = (phoneNumber) => {
-  if (!phoneNumber) return phoneNumber;
-  
-  const phoneNumberValue = phoneNumber.replace(/[^\d]/g, '');
-  const phoneNumberLength = phoneNumberValue.length;
-  
-  if (phoneNumberLength < 3) return phoneNumberValue;
-  
-  if (phoneNumberLength < 6) {
-    return `(${phoneNumberValue.slice(0, 3)}) ${phoneNumberValue.slice(3)}`;
-  }
-  
-  return `(${phoneNumberValue.slice(0, 3)}) ${phoneNumberValue.slice(3, 6)}-${phoneNumberValue.slice(6, 10)}`;
-};
+  const formatPhoneNumber = (phoneNumber) => {
+    if (!phoneNumber) return phoneNumber;
 
+    const phoneNumberValue = phoneNumber.replace(/[^\d]/g, "");
+    const phoneNumberLength = phoneNumberValue.length;
+
+    if (phoneNumberLength < 3) return phoneNumberValue;
+
+    if (phoneNumberLength < 6) {
+      return `(${phoneNumberValue.slice(0, 3)}) ${phoneNumberValue.slice(3)}`;
+    }
+
+    return `(${phoneNumberValue.slice(0, 3)}) ${phoneNumberValue.slice(
+      3,
+      6
+    )}-${phoneNumberValue.slice(6, 10)}`;
+  };
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
 
-
   const HandleInputChange = (e) => {
-    const { name, value, type, checked} = e.target;
-setFormData({
-  ...formData,
-  [name] : type === "checkbox" ? checked : value
-});
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
   const HandleSubmit = (e) => {
     e.preventDefault();
 
-
-      // Phone number validation (at least 10 digits)
-  if (formData.phoneNumber.replace(/\D/g, '').length < 10) {
-    showSnackbar('Please enter a valid phone number');
-    return;
-  }
+    // Phone number validation (at least 10 digits)
+    if (formData.phoneNumber.replace(/\D/g, "").length < 10) {
+      showSnackbar("Please enter a valid phone number");
+      return;
+    }
 
     // Validation
-    if(!formData.fullName || !formData.streetAddress || !formData.townCity || !formData.phoneNumber || !formData.emailAddress) {
-      showSnackbar('Please fill in all required fields');
+    if (
+      !formData.fullName ||
+      !formData.streetAddress ||
+      !formData.townCity ||
+      !formData.phoneNumber ||
+      !formData.emailAddress
+    ) {
+      showSnackbar("Please fill in all required fields");
       return;
     }
 
     if (cartItems.length === 0) {
-      showSnackbar('Your cart is empty');
+      showSnackbar("Your cart is empty");
       return;
     }
 
-    dispatch(placeOrder({
-      ...formData,
-      userID: currentUser?.email || 'guest',
-      paymentMethod: selectedValue === 'a' ? 'bank' : "cash",
-      items: cartItems,
-      total: cartItems.reduce((total, item) => total + (item.price * item.quantity), 0)
-    }));
+    dispatch(
+      placeOrder({
+        ...formData,
+        userID: currentUser?.email || "guest",
+        paymentMethod: selectedValue === "a" ? "bank" : "cash",
+        items: cartItems,
+        total: cartItems.reduce(
+          (total, item) => total + item.price * item.quantity,
+          0
+        ),
+      })
+    );
 
     // Navigate
-    navigate('/OrderConfirmation')
-  }
+    navigate("/OrderConfirmation");
+  };
 
   if (cartItems.length === 0) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="80vh"
+      >
         <Typography variant="h6">Your cart is empty</Typography>
       </Box>
     );
@@ -201,7 +218,12 @@ setFormData({
       </Typography>
 
       {/* Main Box */}
-      <Box display={"flex"} flexDirection={{ xs:"column" , md:"row"}} justifyContent={"space-around"}  mt={4} >
+      <Box
+        display={"flex"}
+        flexDirection={{ xs: "column", md: "row" }}
+        justifyContent={"space-around"}
+        mt={4}
+      >
         {/* TextFields */}
         <Box display={"flex"} flexDirection={"column"} gap={"24px"}>
           {/* "Name" */}
@@ -303,18 +325,18 @@ setFormData({
               name="phoneNumber"
               value={formData.phoneNumber}
               onChange={(e) => {
-                const cleaned = e.target.value.replace(/\D/g, ' ');
+                const cleaned = e.target.value.replace(/\D/g, " ");
 
                 HandleInputChange({
                   target: {
-                    name: 'phoneNumber',
-                    value: cleaned
-                  }
+                    name: "phoneNumber",
+                    value: cleaned,
+                  },
                 });
               }}
               inputProps={{
                 maxLength: 14,
-                inputMode: 'numeric'
+                inputMode: "numeric",
               }}
               sx={{ width: { xs: "80%", sm: "300px", md: "400px" } }}
             />
@@ -359,16 +381,26 @@ setFormData({
           </Box>
         </Box>
 
-{/* ......................................... */}
-
+        {/* ......................................... */}
 
         {/* Product Details */}
-        <Box  display={"flex"} flexDirection={"column"} gap={3}>
+        <Box display={"flex"} flexDirection={"column"} gap={3}>
           {cartItems.map((prd, index) => (
             // {/* product 1 */}
-            <Box key={index} display={"flex"} alignItems={"center"} justifyContent={"space-between"} gap={20}>
+            <Box
+              key={index}
+              display={"flex"}
+              alignItems={"center"}
+              justifyContent={"space-between"}
+              gap={20}
+            >
               <Box display={"flex"} alignItems={"center"} gap={3}>
-                <img src={prd.image} width={"50px"} height={"40px"} alt={prd.name}></img>
+                <img
+                  src={prd.image}
+                  width={"50px"}
+                  height={"40px"}
+                  alt={prd.name}
+                ></img>
                 <Typography>{prd.name}</Typography>
               </Box>
               <Box>
@@ -381,10 +413,9 @@ setFormData({
             <Typography>Subtotal:</Typography>
             <Typography>
               $
-              {cartItems.reduce(
-                (total, item) => total + (item.price * item.quantity),
-                0
-              ).toFixed(2)}
+              {cartItems
+                .reduce((total, item) => total + item.price * item.quantity, 0)
+                .toFixed(2)}
             </Typography>
           </Box>
           {/* Line */}
@@ -402,38 +433,41 @@ setFormData({
             <Typography>
               {" "}
               $
-              {cartItems.reduce(
-                (total, item) => total + (item.price * item.quantity),
-                0
-              ).toFixed(2)}{" "}
+              {cartItems
+                .reduce((total, item) => total + item.price * item.quantity, 0)
+                .toFixed(2)}{" "}
             </Typography>
           </Box>
           {/* Cash Payment Method */}
-          <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
-          <Box display={"flex"} alignItems={"center"} gap={2}>
-            <Radio
-              checked={selectedValue === "a"}
-              onChange={handleChange}
-              value="a"
-              name="paymentMethod"
-              inputProps={{ "aria-label": "Bank payment" }}
-              sx={{
-                color: "black", 
-                '&.Mui-checked': {
-                  color: "black", 
-                },
-                p:0,
-                m:0
-              }}
-            />
-            <Typography>Bank</Typography>
-          </Box>
-          {/* ....................... */}
-          <Box display={"flex"} alignItems={"center"} gap={1}>
-            <img src={Visa} width={"40px"}></img>
-            <img src={PayPal} width={"40px"}></img>
-            <img src={MasterCard } width={"40px"}></img>
-          </Box>
+          <Box
+            display={"flex"}
+            alignItems={"center"}
+            justifyContent={"space-between"}
+          >
+            <Box display={"flex"} alignItems={"center"} gap={2}>
+              <Radio
+                checked={selectedValue === "a"}
+                onChange={handleChange}
+                value="a"
+                name="paymentMethod"
+                inputProps={{ "aria-label": "Bank payment" }}
+                sx={{
+                  color: "black",
+                  "&.Mui-checked": {
+                    color: "black",
+                  },
+                  p: 0,
+                  m: 0,
+                }}
+              />
+              <Typography>Bank</Typography>
+            </Box>
+            {/* ....................... */}
+            <Box display={"flex"} alignItems={"center"} gap={1}>
+              <img src={Visa} width={"40px"}></img>
+              <img src={PayPal} width={"40px"}></img>
+              <img src={MasterCard} width={"40px"}></img>
+            </Box>
           </Box>
           {/* Cash Method */}
           <Box display={"flex"} alignItems={"center"} gap={2}>
@@ -444,46 +478,242 @@ setFormData({
               name="radio-buttons"
               inputProps={{ "aria-label": "A" }}
               sx={{
-                color: "black", 
-                '&.Mui-checked': {
-                  color: "black", 
+                color: "black",
+                "&.Mui-checked": {
+                  color: "black",
                 },
-                p:0,
-                m:0
+                p: 0,
+                m: 0,
               }}
             />
             <Typography>Cash on Delivery</Typography>
           </Box>
           {/* Coupen  */}
-          
-          <Box display={"flex"} flexDirection={{ xs:"column" , md:"row"}} gap={4} >
-          <TextField size="small" defaultValue={"Coupan Code"} sx={{          
-            mx: {xs:3 , md:0} }}>
-          </TextField>
-          <Button
+
+          <Box
+            display={"flex"}
+            flexDirection={{ xs: "column", md: "row" }}
+            gap={4}
+          >
+            <TextField
+              size="small"
+              defaultValue={"Coupan Code"}
+              sx={{
+                mx: { xs: 3, md: 0 },
+              }}
+            ></TextField>
+            {/* <Button
             variant="contained"
             sx={{ backgroundColor: "var(--color-danger)", height:"40px",         
            }}
           
           >
             Apply Coupon
-          </Button>
+          </Button> */}
+            <StyledCoupin>
+              <button className="button">Apply Coupon</button>
+            </StyledCoupin>
           </Box>
           <Box>
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: "var(--color-danger)", height:"40px",         
-           }}
-           onClick={HandleSubmit}
-          
-          >
-            Place Order
-          </Button>
+            <StyledWrapper>
+              <button className="button" onClick={HandleSubmit}>
+                <p>Place Order</p>
+              </button>
+            </StyledWrapper>
           </Box>
-          
-          </Box>
+        </Box>
       </Box>
-      <br /><br /><br /><br />
+      <br />
+      <br />
+      <br />
+      <br />
     </>
   );
 }
+
+const StyledWrapper = styled.div`
+  .button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* optional, for centering text horizontally */
+    position: relative;
+    padding: 0.3em 1.1em; /* reduced vertical and horizontal padding */
+    border: var(--color-danger) solid 0.1em; /* slightly thinner border */
+    border-radius: 0.25em;
+    color: var(--color-danger);
+    font-size: 1em; /* reduced font size */
+    font-weight: 500; /* slightly lighter if needed */
+    line-height: 1; /* controls text height */
+    cursor: pointer;
+    overflow: hidden;
+    transition: border 300ms, color 300ms;
+    user-select: none;
+  }
+  .button p {
+    z-index: 1;
+  }
+
+  .button:hover {
+    color: white;
+  }
+
+  .button:active {
+    border-color: var(--color-danger);
+  }
+
+  .button::after,
+  .button::before {
+    content: "";
+    position: absolute;
+    width: 9em;
+    aspect-ratio: 1;
+    background: var(--color-danger);
+    opacity: 80%;
+    border-radius: 50%;
+    transition: transform 500ms, background 300ms;
+  }
+
+  .button::before {
+    left: 0;
+    transform: translateX(-8em);
+  }
+
+  .button::after {
+    right: 0;
+    transform: translateX(8em);
+  }
+
+  .button:hover:before {
+    transform: translateX(-1em);
+  }
+
+  .button:hover:after {
+    transform: translateX(1em);
+  }
+
+  .button:active:before,
+  .button:active:after {
+    background: var(--color-danger);
+  }
+`;
+
+const StyledCoupin = styled.div`
+  .button {
+    position: relative;
+    padding: 12px 22px;
+    border-radius: 6px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    background-color: var(--color-danger);
+    transition: all 0.2s ease;
+  }
+
+  .button:active {
+    transform: scale(0.96);
+  }
+
+  .button:before,
+  .button:after {
+    position: absolute;
+    content: "";
+    width: 150%;
+    left: 50%;
+    height: 100%;
+    transform: translateX(-50%);
+    z-index: -1000;
+    background-repeat: no-repeat;
+  }
+
+  .button:hover:before {
+    top: -70%;
+    background-image: radial-gradient(
+        circle,
+        var(--color-danger) 20%,
+        transparent 20%
+      ),
+      radial-gradient(
+        circle,
+        transparent 20%,
+        var(--color-danger) 20%,
+        transparent 30%
+      ),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(
+        circle,
+        transparent 10%,
+        var(--color-danger) 15%,
+        transparent 20%
+      ),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%);
+    background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%,
+      15% 15%, 10% 10%, 18% 18%;
+    background-position: 50% 120%;
+    animation: greentopBubbles 0.6s ease;
+  }
+
+  @keyframes greentopBubbles {
+    0% {
+      background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%,
+        40% 90%, 55% 90%, 70% 90%;
+    }
+
+    50% {
+      background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%,
+        50% 50%, 65% 20%, 90% 30%;
+    }
+
+    100% {
+      background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%,
+        50% 40%, 65% 10%, 90% 20%;
+      background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+    }
+  }
+
+  .button:hover::after {
+    bottom: -70%;
+    background-image: radial-gradient(
+        circle,
+        var(--color-danger) 20%,
+        transparent 20%
+      ),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(
+        circle,
+        transparent 10%,
+        var(--color-danger) 15%,
+        transparent 20%
+      ),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%),
+      radial-gradient(circle, var(--color-danger) 20%, transparent 20%);
+    background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%,
+      18% 18%;
+    background-position: 50% 0%;
+    animation: greenbottomBubbles 0.6s ease;
+  }
+
+  @keyframes greenbottomBubbles {
+    0% {
+      background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%,
+        70% -10%, 70% 0%;
+    }
+
+    50% {
+      background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%,
+        105% 0%;
+    }
+
+    100% {
+      background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%,
+        110% 10%;
+      background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+    }
+  }
+`;

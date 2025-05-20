@@ -60,7 +60,7 @@ export default function NewArrival() {
         width={{ xs: "80%", md: "90%", lg: "1154px" }} // Adjusted for better laptop scaling
         maxWidth="1200px" // Added to prevent over-stretching
         mx={"auto"}
-        mt={{ xs: 20, md: 3 }}
+        mt={{ xs: 2, md: 3 }}
       >
         {/* PlayStation */}
         <Stack

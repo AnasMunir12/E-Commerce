@@ -21,7 +21,7 @@ import Remote from "../../images/xremote.png";
 import Keyboard from "../../images/keyboard.png";
 import Lcd from "../../images/LCD.png";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem, addToProduct } from "../Utils/itemSlice";
+import {  addToProduct } from "../Utils/itemSlice";
 
 // ⏳ Countdown Timer Component
 const CountdownTimer = ({ endDate }) => {
@@ -47,7 +47,7 @@ const CountdownTimer = ({ endDate }) => {
   }, [endDate]);
 
   return (
-    <Stack direction={"row"} spacing={3} alignItems={"center"}>
+    <Stack direction={"row"} spacing={{xs: 1, md:3 }} alignItems={"center"}>
       {["days", "hours", "minutes", "seconds"].map((unit, index) => (
         <Stack key={index} alignItems={"center"} direction={"row"}>
           <Stack alignItems={"center"}>
@@ -104,13 +104,13 @@ export default function FlashSales() {
     slidesToScroll: 1,
     responsive: [
       {
-        breakpoint: 900, // md screen
+        breakpoint: 1100, // md screen
         settings: {
           slidesToShow: 3,
         },
       },
       {
-        breakpoint: 600, // sm screen
+        breakpoint: 800, // sm screen
         settings: {
           slidesToShow: 2,
         },
@@ -172,42 +172,42 @@ export default function FlashSales() {
 
   const FlashSalesData = [
     {
-      id: "1",
+      id: "flash-1",
       img: Remote,
       name: "HAVIT HV-G92 Gamepad",
       price: 120,
       discount: "-40%",
     },
     {
-      id: "2",
+      id: "flash-2",
       img: Keyboard,
       name: "AK-900 Wired Keyboard",
       price: 960,
       discount: "-20%",
     },
     {
-      id: "3",
+      id: "flash-3",
       img: Lcd,
       name: "IPS LCD Gaming Monitor",
       price: 370,
       discount: "-10%",
     },
     {
-      id: "4",
+      id: "flash-4",
       img: Keyboard,
       name: "AK-900 Wired Keyboard",
       price: 960,
       discount: "-20%",
     },
     {
-      id: "5",
+      id: "flash-5",
       img: Remote,
       name: "HAVIT HV-G92 Gamepad",
       price: 120,
       discount: "-40%",
     },
     {
-      id: "6",
+      id: "flash-6",
       img: Lcd,
       name: "IPS LCD Gaming Monitor",
       price: 370,
@@ -388,10 +388,10 @@ export default function FlashSales() {
                       });
                       dispatch(
                         addToProduct({
+                          id: Sale?.id,
                           name: Sale?.name,
                           price: Sale?.price,
                           image: Sale?.img,
-                          id: Sale?.id,
                         })
                       );
                       navigate("/cart");
@@ -471,90 +471,90 @@ export default function FlashSales() {
   );
 }
 
-const StyledWrapper = styled.div`
-  button {
-    position: relative;
-    margin: 0;
-    padding: 12px 42px;
-    outline: none;
-    text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    border: none;
-    text-transform: capitalize;
-    background-color: var(--color-danger);
-    border-radius: 4px;
-    color: var(--text-color);
-    font-weight: 500;
-    font-size: var(--font-sm);
-    font-family: inherit;
-    z-index: 0;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
-  }
+// const StyledWrapper = styled.div`
+//   button {
+//     position: relative;
+//     margin: 0;
+//     padding: 12px 42px;
+//     outline: none;
+//     text-decoration: none;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     cursor: pointer;
+//     border: none;
+//     text-transform: capitalize;
+//     background-color: var(--color-danger);
+//     border-radius: 4px;
+//     color: var(--text-color);
+//     font-weight: 500;
+//     font-size: var(--font-sm);
+//     font-family: inherit;
+//     z-index: 0;
+//     overflow: hidden;
+//     transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
+//   }
 
-  button:hover {
-    animation: sh0 0.5s ease-in-out both;
-  }
+//   button:hover {
+//     animation: sh0 0.5s ease-in-out both;
+//   }
 
-  @keyframes sh0 {
-    0% {
-      transform: rotate(0deg) translate3d(0, 0, 0);
-    }
+//   @keyframes sh0 {
+//     0% {
+//       transform: rotate(0deg) translate3d(0, 0, 0);
+//     }
 
-    25% {
-      transform: rotate(7deg) translate3d(0, 0, 0);
-    }
+//     25% {
+//       transform: rotate(7deg) translate3d(0, 0, 0);
+//     }
 
-    50% {
-      transform: rotate(-7deg) translate3d(0, 0, 0);
-    }
+//     50% {
+//       transform: rotate(-7deg) translate3d(0, 0, 0);
+//     }
 
-    75% {
-      transform: rotate(1deg) translate3d(0, 0, 0);
-    }
+//     75% {
+//       transform: rotate(1deg) translate3d(0, 0, 0);
+//     }
 
-    100% {
-      transform: rotate(0deg) translate3d(0, 0, 0);
-    }
-  }
+//     100% {
+//       transform: rotate(0deg) translate3d(0, 0, 0);
+//     }
+//   }
 
-  button:hover span {
-    animation: storm 0.7s ease-in-out both;
-    animation-delay: 0.06s;
-  }
+//   button:hover span {
+//     animation: storm 0.7s ease-in-out both;
+//     animation-delay: 0.06s;
+//   }
 
-  button::before,
-  button::after {
-    content: "";
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background: #fff;
-    opacity: 0;
-    transition: transform 0.15s cubic-bezier(0.02, 0.01, 0.47, 1),
-      opacity 0.15s cubic-bezier(0.02, 0.01, 0.47, 1);
-    z-index: -1;
-    transform: translate(100%, -25%) translate3d(0, 0, 0);
-  }
+//   button::before,
+//   button::after {
+//     content: "";
+//     position: absolute;
+//     right: 0;
+//     bottom: 0;
+//     width: 100px;
+//     height: 100px;
+//     border-radius: 50%;
+//     background: #fff;
+//     opacity: 0;
+//     transition: transform 0.15s cubic-bezier(0.02, 0.01, 0.47, 1),
+//       opacity 0.15s cubic-bezier(0.02, 0.01, 0.47, 1);
+//     z-index: -1;
+//     transform: translate(100%, -25%) translate3d(0, 0, 0);
+//   }
 
-  button:hover::before,
-  button:hover::after {
-    opacity: 0.15;
-    transition: transform 0.2s cubic-bezier(0.02, 0.01, 0.47, 1),
-      opacity 0.2s cubic-bezier(0.02, 0.01, 0.47, 1);
-  }
+//   button:hover::before,
+//   button:hover::after {
+//     opacity: 0.15;
+//     transition: transform 0.2s cubic-bezier(0.02, 0.01, 0.47, 1),
+//       opacity 0.2s cubic-bezier(0.02, 0.01, 0.47, 1);
+//   }
 
-  button:hover::before {
-    transform: translate3d(50%, 0, 0) scale(0.9);
-  }
+//   button:hover::before {
+//     transform: translate3d(50%, 0, 0) scale(0.9);
+//   }
 
-  button:hover::after {
-    transform: translate(50%, 0) scale(1.1);
-  }
-`;
+//   button:hover::after {
+//     transform: translate(50%, 0) scale(1.1);
+//   }
+// `;

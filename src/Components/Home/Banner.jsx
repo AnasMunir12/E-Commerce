@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import styled from 'styled-components';
+
 
 import Iphonerimg from "../../images/Bannerimg.png";
 import Samsungimg from "../../images/samsungbanner.jpg";
@@ -84,19 +86,23 @@ export default function Banner() {
                   </Typography>
                   <Box display={"flex"} alignItems={"center"} >
                     {" "}
-                    <Button
+                    {/* <Button
                       sx={{
                         color: "var(--success-bg)",
                         textTransform: "capitalize",
                       }}
                     >
                       Shop Now
-                    </Button>
-                    <IconButton>
-                      <ArrowForwardRoundedIcon
-                        sx={{ color: "white", fontSize: "var(--font-sm)" }}
-                      />
-                    </IconButton>
+                    </Button> */}
+                        <StyledWrapper>
+      <button className="cta">
+        <span className="hover-underline-animation"> Shop now </span>
+        <svg id="arrow-horizontal" xmlns="http://www.w3.org/2000/svg" width={30} height={10} viewBox="0 0 46 16">
+          <path id="Path_10" data-name="Path 10" d="M8,0,6.545,1.455l5.506,5.506H-30V9.039H12.052L6.545,14.545,8,16l8-8Z" transform="translate(30)" />
+        </svg>
+      </button>
+    </StyledWrapper>
+               
                   </Box>
                 </Grid>
 
@@ -149,26 +155,59 @@ export default function Banner() {
   );
 }
 
-// import React from 'react'
-// import { Box, Button, IconButton, Stack, Typography, Grid } from "@mui/material";
 
-// export default function Banner() {
-//   return (
-//    <Box bgcolor={"black"}>
-//      <Box maxWidth={"1000px"} mx={"auto"}>
-//       <Grid container spacing={2}  sx={{ bgcolor:"red", height:"50vh"}} >
 
-//         <Grid item  xs={12}  md={6}  >
+const StyledWrapper = styled.div`
+  .cta {
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
 
-//           Box 1
-//         </Grid>
-//         <Grid item xs={12}  md={6}  >
+  .cta span {
+    padding-bottom: 7px;
+    letter-spacing: 4px;
+    font-size: 14px;
+    padding-right: 15px;
+    text-transform: uppercase;
+  }
 
-//           Box 2
-//         </Grid>
+  .cta svg {
+    transform: translateX(-8px);
+    transition: all 0.3s ease;
+    fill: white; /* This sets the arrow color to white */
+  }
 
-//       </Grid>
-//     </Box>
-//    </Box>
-//   )
-// }
+  .cta:hover svg {
+    transform: translateX(0);
+  }
+
+  .cta:active svg {
+    transform: scale(0.9);
+  }
+
+  .hover-underline-animation {
+    position: relative;
+    color: white;
+    padding-bottom: 20px;
+  }
+
+  .hover-underline-animation:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: white;
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+  }
+
+  .cta:hover .hover-underline-animation:after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+`;
+

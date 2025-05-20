@@ -352,7 +352,7 @@ const sliderSettings = {
   <Grid container justifyContent="center">
   <Grid item xs={12}>
     <Box display="flex" justifyContent="center" width="100%">
-      <Box position="relative" width="100%" maxWidth="1200px">
+      <Box position="relative" width="100%" maxWidth="1200px" mx="auto">
         <Slider {...sliderSettings}>
           {profileData.map((profile, index) => (
             <Box
@@ -361,7 +361,7 @@ const sliderSettings = {
               sx={{
                 borderRadius: 2,
                 p: 2,
-                boxShadow: "0px 4px 12px rgba(0,0,0,0.1)",
+                // boxShadow: "0px 4px 12px rgba(0,0,0,0.1)",
                 transition: "all 0.3s ease",
               }}
             >
