@@ -14,6 +14,7 @@ import Checkout from './Pages/Checkout'
 import ConfirmOrder from './Pages/ConfirmOrder'
 import SellingProductDT from './Components/Productdetail/SellingProductDT'
 import ExploreDT from './Components/Productdetail/ExploreDT'
+import AccountDetail from './Pages/AccountDetail'
 // import EmailVerification from './Components/Signup/EmailVerfication'
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
         <Route path='/cart' element={<AddtoCart />} />
         <Route path='/checkout' element={<Checkout />} />
         <Route path='/orderConfirmation' element={<ConfirmOrder />} />
+        <Route path='/account' element={<AccountDetail />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/signup' element={<Signup />} />

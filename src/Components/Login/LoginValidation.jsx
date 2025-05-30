@@ -1,15 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Grid, TextField, Typography, Snackbar, Alert } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  TextField,
+  Typography,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import HashLoader from "react-spinners/HashLoader";
 import Loginimg from "../../images/LoginSignup.png";
 import googlleicon from "../../images/google.png";
 
 import { useDispatch } from "react-redux";
-import { setUser } from "../Utils/itemSlice"; 
+import { setUser } from "../Utils/itemSlice";
 
+import {
+  ErrorOutline,
+  CheckCircleOutline,
+  WarningAmberOutlined,
+  InfoOutlined,
+} from "@mui/icons-material";
+import Slide from "@mui/material/Slide";
+
+import Lottie from "lottie-react";
+import LoginAnimation from "./Login.json";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -19,14 +37,29 @@ export default function Login() {
   const [snackSeverity, setSnackSeverity] = useState("success");
   const [loading, setLoading] = useState(false);
 
+  const location = useLocation();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("info");
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  
   useEffect(() => {
-  const userInfo = localStorage.getItem("UserInfo");
-  if (userInfo) navigate("/");
-}, [navigate]);
+    if (location.state?.snackbar) {
+      setSnackbarMessage(location.state.snackbar.message);
+      setSnackbarSeverity(location.state.snackbar.severity);
+      setOpenSnackbar(true);
+
+      // Clear the state so it doesn't show again on refresh
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, navigate, location.pathname]);
+
+  useEffect(() => {
+    const userInfo = localStorage.getItem("UserInfo");
+    if (userInfo) navigate("/");
+  }, [navigate]);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -37,33 +70,36 @@ export default function Login() {
     }
 
     try {
-      const { data } = await axios.post("http://localhost:5000/api/user/login", {
-        email,
-        password,
-      });
+      const { data } = await axios.post(
+        "http://localhost:5000/api/user/login",
+        {
+          email,
+          password,
+        }
+      );
       dispatch(setUser(data));
-      localStorage.setItem("UserInfo" ,  JSON.stringify(data))
+      localStorage.setItem("UserInfo", JSON.stringify(data));
 
       setSnackMsg("Login successful!");
       setSnackSeverity("success");
       setOpen(true);
 
-    // After 0.5 seconds, show loader
-    setTimeout(() => {
-      setLoading(true);
-
-      // After 1.5 seconds, hide loader and navigate
+      // After 0.5 seconds, show loader
       setTimeout(() => {
-        setLoading(false);
-        navigate("/");
-      }, 1500);
-    }, 1000);
-  } catch (error) {
-    setSnackMsg(error.response?.data?.message || "Login failed");
-    setSnackSeverity("error");
-    setOpen(true);
-  }
-};
+        setLoading(true);
+
+        // After 1.5 seconds, hide loader and navigate
+        setTimeout(() => {
+          setLoading(false);
+          navigate("/");
+        }, 1500);
+      }, 1000);
+    } catch (error) {
+      setSnackMsg(error.response?.data?.message || "Login failed");
+      setSnackSeverity("error");
+      setOpen(true);
+    }
+  };
 
   const handleClose = () => {
     setOpen(false);
@@ -71,6 +107,62 @@ export default function Login() {
 
   return (
     <>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        TransitionComponent={(props) => <Slide {...props} direction="left" />}
+        sx={{
+          "& .MuiPaper-root": {
+            borderRadius: "12px",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+          },
+        }}
+      >
+        <Alert
+          severity={snackbarSeverity}
+          onClose={() => setOpenSnackbar(false)}
+          sx={{
+            backgroundColor:
+              snackbarSeverity === "error"
+                ? "var(--color-danger)"
+                : snackbarSeverity === "success"
+                ? "#4caf50"
+                : "#1976d2",
+            color: "white",
+            borderRadius: "10px",
+            padding: "8px 16px",
+            alignItems: "center",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+            "& .MuiAlert-icon": {
+              color: "white",
+              fontSize: "1.5rem",
+              marginRight: "12px",
+            },
+            "& .MuiAlert-message": {
+              padding: "4px 0",
+              fontSize: "0.95rem",
+              fontWeight: 500,
+            },
+            "& .MuiAlert-action": {
+              paddingLeft: "16px",
+              alignItems: "center",
+            },
+          }}
+          iconMapping={{
+            error: <ErrorOutline fontSize="inherit" />,
+            success: <CheckCircleOutline fontSize="inherit" />,
+            warning: <WarningAmberOutlined fontSize="inherit" />,
+            info: <InfoOutlined fontSize="inherit" />,
+          }}
+        >
+          <Typography variant="body1" sx={{ fontWeight: 500 }}>
+            {snackbarMessage}
+          </Typography>
+        </Alert>
+      </Snackbar>
+
       {loading && (
         <Box
           sx={{
@@ -101,19 +193,36 @@ export default function Login() {
         </Alert>
       </Snackbar>
 
-      <Grid container mt={4}>
+      <Grid container mt={4} justifyContent={"center"}>
         {/* Left image */}
-        <Grid item xs={12} md={6}>
-        <StyledImageWrapper>
+        <Grid item xs={12} sm={7} md={5}>
+          {/* <StyledImageWrapper>
             <img src={Loginimg} alt="Login"  />
-            </StyledImageWrapper>
+            </StyledImageWrapper> */}
+          <Box
+            sx={{
+              mx:"auto",
+              height: { xs: "300px", sm: "450px", md: "550px" },
+              width: { xs: "300px", sm: "450px", md: "550px" },
+            }}
+          >
+            <Lottie
+              loop
+              animationData={LoginAnimation}
+              play
+              sx={{
+                height: "100%",
+                width: "100%",
+              }}
+            />
+          </Box>
         </Grid>
 
         {/* Right form */}
         <Grid
           item
           xs={12}
-          md={6}
+          md={5}
           display="flex"
           flexDirection="column"
           justifyContent="center"
@@ -152,7 +261,9 @@ export default function Login() {
                   variant="standard"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  InputLabelProps={{ sx: { fontSize: { xs: "12px", md: "16px" } } }}
+                  InputLabelProps={{
+                    sx: { fontSize: { xs: "12px", md: "16px" } },
+                  }}
                 />
                 <TextField
                   label="Password"
@@ -160,7 +271,9 @@ export default function Login() {
                   variant="standard"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  InputLabelProps={{ sx: { fontSize: { xs: "12px", md: "16px" } } }}
+                  InputLabelProps={{
+                    sx: { fontSize: { xs: "12px", md: "16px" } },
+                  }}
                 />
               </Box>
 
@@ -203,13 +316,21 @@ export default function Login() {
                     }}
                   />
                   <Typography
-                    sx={{ fontSize: { xs: "var(--font-xs)", md: "var(--font-md)" } }}
+                    sx={{
+                      fontSize: { xs: "var(--font-xs)", md: "var(--font-md)" },
+                    }}
                   >
                     Sign in with Google
                   </Typography>
                 </Box>
 
-                <Box display="flex" justifyContent="center" width="100%" gap={2} mt={2}>
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  width="100%"
+                  gap={2}
+                  mt={2}
+                >
                   <Typography
                     sx={{
                       fontSize: { xs: "var(--font-xs)", md: "var(--font-sm)" },
@@ -217,7 +338,10 @@ export default function Login() {
                     }}
                   >
                     Don’t have an account?{" "}
-                    <Link to="/signup" style={{ color: "black", fontWeight: 700 }}>
+                    <Link
+                      to="/signup"
+                      style={{ color: "black", fontWeight: 700 }}
+                    >
                       Sign up
                     </Link>
                   </Typography>
@@ -227,10 +351,11 @@ export default function Login() {
           </Box>
         </Grid>
       </Grid>
+      <br />
+      <br />
     </>
   );
 }
-
 
 const StyledImageWrapper = styled(Box)`
   display: flex;
@@ -297,7 +422,11 @@ const StyledWrapper = styled.div`
     position: relative;
     padding: 0.75em 1.25em;
     border-radius: 6px;
-    background: radial-gradient(circle at top left, var(--color-danger) 0%, #b92b27 100%);
+    background: radial-gradient(
+      circle at top left,
+      var(--color-danger) 0%,
+      #b92b27 100%
+    );
     overflow: hidden;
     transition: all 0.3s ease-in-out;
   }

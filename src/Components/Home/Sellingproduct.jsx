@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Rating, Stack, Typography, Grid } from "@mui/material";
+import { Box, Button, IconButton, Rating, Stack, Typography, Grid, Snackbar, Alert } from "@mui/material";
 import React, { useState } from "react";
 
 import Coat from "../../images/coat.png";
@@ -15,6 +15,8 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {  addToProduct } from "../Utils/itemSlice";
+import Slide from '@mui/material/Slide';
+
 
 
 
@@ -63,6 +65,9 @@ const AnimatedRating = styled(Rating)`
 
 export default function Sellingproduct() {
 
+  const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState("");
+
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.items.cartItems);  // get item from redux
   console.log("Items" , cartItems);
@@ -80,6 +85,54 @@ export default function Sellingproduct() {
   
   return (
     <>
+
+    <Snackbar
+      open={open}
+      autoHideDuration={3000}
+      onClose={() => setOpen(false)}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      TransitionComponent={(props) => <Slide {...props} direction="left" />}
+      sx={{
+        '& .MuiSnackbarContent-root': {
+          minWidth: 'unset',
+          flexGrow: 0,
+        }
+      }}
+    >
+      <Alert
+        severity="info"
+        onClose={() => setOpen(false)}
+        sx={{ 
+          backgroundColor: "var(--color-danger)",
+          color: "white",
+          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)',
+          borderRadius: '8px',
+          alignItems: 'center',
+          '& .MuiAlert-icon': {
+            color: 'white',
+            fontSize: '1.5rem',
+            marginRight: '8px'
+          },
+          '& .MuiAlert-message': {
+            padding: '4px 0',
+            fontSize: '0.9rem'
+          },
+          '& .MuiAlert-action': {
+            paddingLeft: '16px',
+            alignItems: 'center'
+          }
+        }}
+        iconMapping={{
+          info: <ShoppingCartOutlinedIcon fontSize="inherit" />
+        }}
+      >
+        <Typography variant="body1" sx={{ fontWeight: 500 }}>
+          {message}
+        </Typography>
+      </Alert>
+    </Snackbar>
+
+
       <Stack mt={"100px"} direction={"row"} alignItems={"center"} gap={"16px"} ml={"50px"}>
         <Stack
           sx={{
@@ -165,7 +218,9 @@ export default function Sellingproduct() {
                           image: Sell?.img,
                         })
                       );
-                      navigate("/cart");
+                      setMessage(`${Sell.name} added to cart!`)
+                      setOpen(true)
+                      // navigate("/cart");
                     }}
                     display={"flex"}
                     alignItems={"center"}

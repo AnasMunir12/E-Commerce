@@ -1,22 +1,110 @@
 import {
+  Alert,
   Box,
   Button,
   IconButton,
   Input,
+  Snackbar,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React ,{useRef, useState} from "react";
 import { Link } from "react-router-dom";
 import styled from 'styled-components';
+import emailjs from '@emailjs/browser';
+import Slide from "@mui/material/Slide";
+
 
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined";
 
 export default function Contactmain() {
+  const [ open , setOpen ] = useState(false);
+  const [ message , setMessage ] =useState(" ");
+  const [ iseSuccess , setIsSuccess] = useState(true);
+  const form = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    const name = form.current.name.value.trim();
+    const email = form.current.email.value.trim();
+    const phone = form.current.phone.value.trim();
+    const textMessage = form.current.message.value.trim();
+
+    if( !name || !email || !phone || !textMessage ) {
+      setMessage("Please fill in all the fields");
+      setIsSuccess(false);
+      setOpen(true);
+      return;
+    }
+
+    emailjs.sendForm(
+      "service_wtanvqu",
+      "template_x27o0yj",
+      form.current,
+      "sK1QosKDSTZ0DZiip",
+    ).then(
+      (result) => {
+        setMessage('Message sent Successfully!');
+        setIsSuccess(true);
+        setOpen(true);
+        form.current.reset();
+      },
+      (error) => {
+        setMessage("Failed to send message. Please try again. ");
+      setIsSuccess(false);
+        setOpen(true);
+      }
+    );
+  };
   return (
     <>
+     <Snackbar
+      open={open}
+      autoHideDuration={3000}
+      onClose={() => setOpen(false)}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      TransitionComponent={(props) => <Slide {...props} direction="right" />}
+      sx={{
+        '& .MuiSnackbarContent-root': {
+          minWidth: 'unset',
+          flexGrow: 0,
+        }
+      }}
+    >
+      <Alert
+        severity={ iseSuccess ? "success" : "error"}
+        onClose={() => setOpen(false)}
+        sx={{ 
+          backgroundColor:  iseSuccess ? "var(--color-success)" : "var(--color-danger)",
+          color: "white",
+          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)',
+          borderRadius: '8px',
+          alignItems: 'center',
+          '& .MuiAlert-icon': {
+            color: 'white',
+            fontSize: '1.5rem',
+            marginRight: '8px'
+          },
+          '& .MuiAlert-message': {
+            padding: '4px 0',
+            fontSize: '0.9rem'
+          },
+          '& .MuiAlert-action': {
+            paddingLeft: '16px',
+            alignItems: 'center'
+          }
+        }}
+      >
+        <Typography variant="body1" sx={{ fontWeight: 500 }}>
+          {message}
+        </Typography>
+      </Alert>
+    </Snackbar>
+
+
       {/* Links  */}
       <Box display="flex" alignItems="center" gap={1.5} mt={8} px={{ xs:2, md:6 }}>
         <Typography
@@ -73,13 +161,15 @@ export default function Contactmain() {
         </Box>
 
         {/* Right Side of Contact */}
+    <form ref={form} onSubmit={sendEmail}>
         <Box>
           <Box direction={"row"}  display={"flex"}  flexDirection={{ xs:"column" , md:"row"}}  gap={ 2}>
-            <TextField placeholder="Your Name'"  size="small"  fullWidth sx={{ background:"var(--success-bg)"}} ></TextField>
-            <TextField placeholder="Your Email'" size="small" fullWidth sx={{ background:"var(--success-bg)",}}></TextField>
-            <TextField placeholder="Your Phone'" size="small" fullWidth sx={{ background:"var(--success-bg)" ,}}></TextField>
+            <TextField name="name" placeholder="Your Name"  size="small"  fullWidth sx={{ background:"var(--success-bg)"}} ></TextField>
+            <TextField name="email" placeholder="Your Email" size="small" fullWidth sx={{ background:"var(--success-bg)",}}></TextField>
+            <TextField name="phone" placeholder="Your Phone" size="small" fullWidth sx={{ background:"var(--success-bg)" ,}}></TextField>
           </Box>
           <TextField
+          name="message"
             placeholder="Your Message"
             fullWidth
             sx={{ mt: 2 , background:"var(--success-bg)"}}
@@ -96,6 +186,8 @@ export default function Contactmain() {
     </StyledWrapper>
           </Stack>
         </Box>
+      </form>
+
       </Box>
 
       <Box mt={20}></Box>

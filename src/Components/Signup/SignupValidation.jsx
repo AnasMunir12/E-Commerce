@@ -17,6 +17,9 @@ import HashLoader from "react-spinners/HashLoader";
 import { InputAdornment, IconButton } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
+import Lottie from "lottie-react";
+import SignupAnimation from './Signup.json'
+
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -284,9 +287,26 @@ const handleClose = () => {
         </Grid>
 
           <Grid item xs={12} md={6}>
-  <StyledImageWrapper>
+  {/* <StyledImageWrapper>
     <img src={Signupimg} alt="Signup" />
-  </StyledImageWrapper>
+  </StyledImageWrapper> */}
+  <Box
+              sx={{
+                mx:"auto",
+                height: { xs: "350px", sm: "450px", md: "550px" },
+                width: { xs: "350px", sm: "450px", md: "550px" },
+              }}
+            >
+   <Lottie
+                    loop
+                    animationData={SignupAnimation}
+                    play
+                    style={{
+                      height: "100%",
+                      width: "100%",
+                    }}
+                  />
+                  </Box>
 </Grid>
 
 

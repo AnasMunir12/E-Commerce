@@ -13,6 +13,9 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 import { useNavigate } from "react-router-dom";
+import { Snackbar, Alert } from "@mui/material";
+import Slide from '@mui/material/Slide';
+
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -21,7 +24,7 @@ import Remote from "../../images/xremote.png";
 import Keyboard from "../../images/keyboard.png";
 import Lcd from "../../images/LCD.png";
 import { useDispatch, useSelector } from "react-redux";
-import {  addToProduct } from "../Utils/itemSlice";
+import { addToProduct } from "../Utils/itemSlice";
 
 // ⏳ Countdown Timer Component
 const CountdownTimer = ({ endDate }) => {
@@ -37,6 +40,8 @@ const CountdownTimer = ({ endDate }) => {
       : { days: 0, hours: 0, minutes: 0, seconds: 0 };
   };
 
+  const navigate = useNavigate();
+
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
@@ -47,7 +52,7 @@ const CountdownTimer = ({ endDate }) => {
   }, [endDate]);
 
   return (
-    <Stack direction={"row"} spacing={{xs: 1, md:3 }} alignItems={"center"}>
+    <Stack direction={"row"} spacing={{ xs: 1, md: 3 }} alignItems={"center"}>
       {["days", "hours", "minutes", "seconds"].map((unit, index) => (
         <Stack key={index} alignItems={"center"} direction={"row"}>
           <Stack alignItems={"center"}>
@@ -86,6 +91,8 @@ const CountdownTimer = ({ endDate }) => {
 };
 
 export default function FlashSales() {
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
 
   const dispatch = useDispatch(); // when I have to store  item
   const cartItems = useSelector((state) => state.items.cartItems); // when I get the item
@@ -220,6 +227,52 @@ export default function FlashSales() {
 
   return (
     <>
+    <Snackbar
+  open={open}
+  autoHideDuration={3000}
+  onClose={() => setOpen(false)}
+  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+  TransitionComponent={(props) => <Slide {...props} direction="left" />}
+  sx={{
+    '& .MuiSnackbarContent-root': {
+      minWidth: 'unset',
+      flexGrow: 0,
+    }
+  }}
+>
+  <Alert 
+    severity="info"
+    onClose={() => setOpen(false)}
+    sx={{ 
+      backgroundColor: "var(--color-danger)",
+      color: "white",
+      boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)',
+      borderRadius: '8px',
+      alignItems: 'center',
+      '& .MuiAlert-icon': {
+        color: 'white',
+        fontSize: '1.5rem',
+        marginRight: '8px'
+      },
+      '& .MuiAlert-message': {
+        padding: '4px 0',
+        fontSize: '0.9rem'
+      },
+      '& .MuiAlert-action': {
+        paddingLeft: '16px',
+        alignItems: 'center'
+      }
+    }}
+    iconMapping={{
+      info: <ShoppingCartOutlinedIcon fontSize="inherit" />
+    }}
+  >
+    <Typography variant="body1" sx={{ fontWeight: 500 }}>
+      {message}
+    </Typography>
+  </Alert>
+</Snackbar>
+
       {/* Section Header */}
       <Stack
         mt={"100px"}
@@ -252,7 +305,6 @@ export default function FlashSales() {
         mt={2}
         direction={{ xs: "column", sm: "column", md: "row" }}
         justifyContent={"space-between"}
-      
       >
         <Stack
           direction={{ xs: "column", md: "row" }}
@@ -265,7 +317,7 @@ export default function FlashSales() {
         </Stack>
 
         {/* Navigation Buttons */}
-        <Stack direction={"row"} >
+        <Stack direction={"row"}>
           <IconButton
             onClick={() => sliderRef.current.slickPrev()}
             disableRipple
@@ -297,7 +349,13 @@ export default function FlashSales() {
         </Stack>
       </Stack>
 
-      <Stack display={"flex"} justifyContent={"center"} width="96%" mx="auto" mt={3}>
+      <Stack
+        display={"flex"}
+        justifyContent={"center"}
+        width="96%"
+        mx="auto"
+        mt={3}
+      >
         <Box sx={{ width: "100%" }}>
           {/* Flash Sales Slider */}
           <Slider ref={sliderRef} {...settings}>
@@ -379,13 +437,14 @@ export default function FlashSales() {
                   <Box
                     component={"button"}
                     onClick={() => {
-                      console.log("Dispatching:", {
-                        // Debug log
-                        name: Sale.name,
-                        price: Sale.price,
-                        image: Sale.img,
-                        id: Sale.id,
-                      });
+                      const userInfo = localStorage.getItem("UserInfo");
+                      if (!userInfo) {
+                        setMessage("Please login to add items to your cart");
+                        setOpen(true);
+                        // Delay navigation to allow notification to be seen
+                        setTimeout(() => navigate("/login"), 1500);
+                        return;
+                      }
                       dispatch(
                         addToProduct({
                           id: Sale?.id,
@@ -394,7 +453,9 @@ export default function FlashSales() {
                           image: Sale?.img,
                         })
                       );
-                      navigate("/cart");
+                      setMessage(`${Sale.name} added to cart!`);
+                      setOpen(true);
+                        // setTimeout(() => navigate("/login"), 2500);
                     }}
                     display={"flex"}
                     alignItems={"center"}

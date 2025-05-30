@@ -1,5 +1,5 @@
 import { Box, Grid, IconButton, Typography } from "@mui/material";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import Image from "../../images/SideImage.png";
@@ -18,6 +18,9 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import Slider from "react-slick";
+import CountUp from "react-countup";
+import { useInView } from "react-intersection-observer";
+
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -69,6 +72,12 @@ const ArrowBtn = ({ className, onClick, direction }) => (
 );
 
 export default function AboutMain() {
+
+  const { ref: countRef, inView } = useInView({
+  triggerOnce: true, // Count only once
+  threshold: 0.5 , // Trigger when 30% visible
+});
+
 
   const sliderRef = useRef();
 
@@ -175,13 +184,15 @@ const sliderSettings = {
         </Grid>
       </Grid>
 
-      <Grid container mt={2} spacing={4} px={6}>
+      <Grid container mt={2} spacing={2} px={10} >
         <Grid item xs={12} sm={6} md={3}>
           <Box
+          ref={countRef}
             sx={{
               border: "1px solid #0000004D",
-              borderRadius: "4px",
-              boxShadow: "30%",
+              borderRadius: "10px",
+              // boxShadow: "30%",
+              boxShadow: "0px 4px 1000px rgba(0, 0, 0, 0.1)",
               transition: "all 0.5s ease",
               cursor: "pointer",
               "&:hover": {
@@ -193,7 +204,8 @@ const sliderSettings = {
               },
             }}
             width={"100%"}
-            maxWidth={"200px"}
+            maxWidth={"220px"}
+            height={"45%"}
             mx={"auto"}
             // height={"180px"}
             display={"flex"}
@@ -208,7 +220,11 @@ const sliderSettings = {
               />
             </IconButton>
             <Typography sx={{ fontSize: "var(--font-md)", fontWeight: 750 }}>
-              10.5K
+                   {inView ? (
+                <CountUp  end={10}  duration={5}  decimal={1} suffix="K" />
+              ) : (
+              "0"
+              )}
             </Typography>
             <Typography sx={{ fontSize: "var(--font-xs)" }}>
               {" "}
@@ -219,10 +235,11 @@ const sliderSettings = {
         {/* ................................................ */}
         <Grid item xs={12} sm={6} md={3}>
           <Box
+          ref={countRef}
             sx={{
               border: "1px solid #0000004D",
-              borderRadius: "4px",
-              boxShadow: "30%",
+              borderRadius: "10px",
+              boxShadow: "0px 4px 1000px rgba(0, 0, 0, 0.1)",
               transition: "all 0.5s ease",
               cursor: "pointer",
               "&:hover": {
@@ -234,7 +251,8 @@ const sliderSettings = {
               },
             }}
             width={"100%"}
-            maxWidth={"200px"}
+            maxWidth={"220px"}
+            height={"45%"}
             mx={"auto"}
             // height={"180px"}
             display={"flex"}
@@ -249,7 +267,12 @@ const sliderSettings = {
               />
             </IconButton>
             <Typography sx={{ fontSize: "var(--font-md)", fontWeight: 750 }}>
-              33K
+                          {inView ? (
+                <CountUp  end={33}  duration={5}  decimal={1} suffix="K" />
+              ) : (
+              "0"
+              )}
+              
             </Typography>
             <Typography sx={{ fontSize: "var(--font-xs)" }}>
               {" "}
@@ -260,10 +283,11 @@ const sliderSettings = {
         {/* ................................................ */}
         <Grid item xs={12} sm={6} md={3}>
           <Box
+          ref={countRef}
             sx={{
               border: "1px solid #0000004D",
-              borderRadius: "4px",
-              boxShadow: "30%",
+              borderRadius: "10px",
+              boxShadow: "0px 4px 1000px rgba(0, 0, 0, 0.1)",              
               transition: "all 0.5s ease",
               cursor: "pointer",
               "&:hover": {
@@ -275,7 +299,8 @@ const sliderSettings = {
               },
             }}
             width={"100%"}
-            maxWidth={"200px"}
+            maxWidth={"220px"}
+            height={"45%"}
             mx={"auto"}
             // height={"180px"}
             display={"flex"}
@@ -290,7 +315,12 @@ const sliderSettings = {
               />
             </IconButton>
             <Typography sx={{ fontSize: "var(--font-md)", fontWeight: 750 }}>
-              45.5K
+              {inView ? (
+                <CountUp  end={45}  duration={5}  decimal={1} suffix="K" />
+              ) : (
+              "0"
+              )}
+
             </Typography>
             <Typography sx={{ fontSize: "var(--font-xs)" }}>
               {" "}
@@ -302,10 +332,11 @@ const sliderSettings = {
         {/* ................................................ */}
         <Grid item xs={12} sm={6} md={3}>
           <Box
+          ref={countRef}
             sx={{
               border: "1px solid #0000004D",
-              borderRadius: "4px",
-              boxShadow: "30%",
+              borderRadius: "10px",
+              boxShadow: "0px 4px 1000px rgba(0, 0, 0, 0.1)",
               transition: "all 0.5s ease",
               cursor: "pointer",
               "&:hover": {
@@ -317,7 +348,8 @@ const sliderSettings = {
               },
             }}
             width={"100%"}
-            maxWidth={"200px"}
+            maxWidth={"220px"}
+            height={"45%"}
             mx={"auto"}
             // height={"180px"}
             display={"flex"}
@@ -332,7 +364,11 @@ const sliderSettings = {
               />
             </IconButton>
             <Typography sx={{ fontSize: "var(--font-md)", fontWeight: 750 }}>
-              25K
+                          {inView ? (
+                <CountUp  end={25}  duration={5}  decimal={1} suffix="K" />
+              ) : (
+              "0"
+              )}
             </Typography>
             <Typography sx={{ fontSize: "var(--font-xs)" }}>
               {" "}

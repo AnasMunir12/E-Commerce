@@ -1,13 +1,13 @@
 import { Box, Button, Grid, IconButton, TextField, Typography } from "@mui/material";
-import React, { useRef } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useRef } from "react";
+import { Link, useFetcher } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import { useSelector , useDispatch } from "react-redux";
 import { UpdateQuantity , RemovefromCart } from "../Utils/itemSlice";
 
-import flashSales from '../Home/FlashSales';
 
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
+import CartEmpty from '../../images/cart.png'
 
 import styled from 'styled-components';
 export default function Cart() {
@@ -31,23 +31,25 @@ export default function Cart() {
   if (cartItems.length === 0) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+        <img src={CartEmpty}  alt="CartEmpty Image" />
         <Typography variant="h6">Your cart is empty</Typography>
       </Box>
     );
   }
- 
 
-  if (!cartItems) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
-        <Typography variant="h6">Your cart is empty</Typography>
-      </Box>
-    );
-  }
 
   const HandleCheckout = () => {
     navigate('/checkout' , {state:{ cartItems }});
   };
+
+
+  useEffect( () => {
+    const userInfo = localStorage.getItem('UserInfo');
+    if (!userInfo) {
+      navigate('/login')
+      return;
+    }
+  });
 
   return (
     <>
@@ -209,9 +211,9 @@ export default function Cart() {
       >
       {/* Coupan  */}
         <Box display={"flex"} flexDirection={{ xs:"column" , md:"row"}} gap={4} >
-          <TextField size="small" placeholder={"Coupan Code"} sx={{          
+          <TextField size="small" placeholder={"Coupon Code"} sx={{          
             mx: {xs:3 , md:0} }}>
-            Caupon Code
+            Coupon Code
           </TextField>
    
                <StyledCoupin>

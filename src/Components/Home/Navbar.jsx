@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   IconButton,
@@ -11,10 +11,11 @@ import {
   ListItemText,
   useMediaQuery,
   useTheme,
-  Button,
+  Snackbar,
+  Alert
 } from "@mui/material";
 
-import { Link } from "react-router-dom"; // ✅ Correct
+import { Link, useLocation } from "react-router-dom"; // ✅ Correct
 
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
@@ -22,6 +23,10 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+
+import HashLoader from "react-spinners/HashLoader";
+import { RotateLoader } from "react-spinners";
+
 
 import logo from "../../images/E_logo.png";
 
@@ -31,6 +36,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../Utils/itemSlice";
 import { useNavigate } from "react-router-dom";
 export default function Navbar() {
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("error");
+
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -61,7 +71,7 @@ export default function Navbar() {
     { name: "Home", path: "/" },
     { name: "Contact", path: "/contact" },
     { name: "About", path: "/about" },
-    ...(user ? []  : [{ name: "Login", path: "/login" }]),
+    ...(user ? [] : [{ name: "Login", path: "/login" }]),
   ];
 
   const toggleDrawer = (open) => () => {
@@ -74,8 +84,123 @@ export default function Navbar() {
     setLiked(!liked);
   };
 
+  const location = useLocation();
+  const isAccountpage = location.pathname === "/account";
+  const isCartpage = location.pathname === "/cart";
+
+  const [loading, setLoading] = useState(false);
+
+  const HandleCart = (e) => {
+    e.preventDefault();
+
+        if (!user) {
+      setSnackbarMessage("Please login to access your cart");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+      navigate("/login", {
+        state: {
+          snackbar: {
+            message: "Please login/Signup to access your cart",
+            severity: "error",
+          },
+        },
+      });
+      return;
+    }
+
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate("/cart");
+    }, 1000);
+  };
+
+
+  // Rotate Loader
+  const [loadinRoute , setLoadingRoute] = useState(false);
+  const [targetpath , setTagetpath ] = useState("");
+
+  useEffect(() => {
+  if (loadinRoute && targetpath) {
+    const timer = setTimeout(() => {
+      navigate(targetpath);
+      setLoadingRoute(false);
+      setTagetpath("");
+    }, 500);
+    return () => clearTimeout(timer);
+  }
+}, [loadinRoute, targetpath, navigate]);
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
+   if (loading) {
+    return (
+      <Box
+        sx={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#ffffff",
+          zIndex: 1300,
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+         zIndex: 2000,
+        }}
+      >
+        <HashLoader color="var(--color-danger)" size={60} />
+      </Box>
+    );
+  }
+
+  
+  if (loadinRoute) {
+  return (
+    <Box
+      sx={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#ffffff",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        zIndex: 2000,
+      }}
+    >
+      <RotateLoader color="var(--color-danger)" size={20} />
+    </Box>
+  );
+}
+
+
   return (
     <>
+
+
+
+     <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          severity={snackbarSeverity}
+          onClose={handleCloseSnackbar}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+
+      
       <Box p={2}>
         <Box
           display={"flex"}
@@ -109,30 +234,52 @@ export default function Navbar() {
             </Link>
           </Box>
           {!isSmall && (
-            <Stack direction="row" spacing={4}>
-              {navLinks.map((link, index) => (
-                <Link
-                  key={index}
-                  to={link.path}
-                  style={{
-                    textDecoration: "none",
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      color: "black",
-                      fontSize: "small",
-                      transition: "color 0.3s ease",
-                      "&:hover": {
-                        color: "var(--color-danger)",
-                      },
-                    }}
-                  >
-                    {link.name}
-                  </Typography>
-                </Link>
-              ))}
-            </Stack>
+           <Stack direction="row" spacing={4}>
+  {navLinks.map((link, index) => {
+    const isDelayedRoute = ["Home" ,"Contact", "About"].includes(link.name);
+
+    return isDelayedRoute ? (
+      <Typography
+        key={index}
+        sx={{
+          cursor: "pointer",
+          color: "black",
+          fontSize: "small",
+          transition: "color 0.3s ease",
+          "&:hover": {
+            color: "var(--color-danger)",
+          },
+        }}
+        onClick={() => {
+          setTagetpath(link.path);
+          setLoadingRoute(true);
+        }}
+      >
+        {link.name}
+      </Typography>
+    ) : (
+      <Link
+        key={index}
+        to={link.path}
+        style={{ textDecoration: "none" }}
+      >
+        <Typography
+          sx={{
+            color: "black",
+            fontSize: "small",
+            transition: "color 0.3s ease",
+            "&:hover": {
+              color: "var(--color-danger)",
+            },
+          }}
+        >
+          {link.name}
+        </Typography>
+      </Link>
+    );
+  })}
+</Stack>
+
           )}
 
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -208,12 +355,26 @@ export default function Navbar() {
               )}
             </IconButton>
 
-            <IconButton>
-              <ShoppingCartOutlinedIcon fontSize="small" />
+            <IconButton
+              component={Link}
+              to="/cart"
+              onClick={HandleCart}
+            >
+                <ShoppingCartOutlinedIcon
+                  sx={{
+                    fontSize: "var(--font-md)",
+                    color: isCartpage ? "var(--color-danger)" : "inherit",
+                  }}
+                />
             </IconButton>
 
-            <IconButton onClick={handleUserMenuOpen}>
-              <AccountCircleOutlinedIcon fontSize="small" />
+            <IconButton component={Link} to="/account">
+              <AccountCircleOutlinedIcon
+                sx={{
+                  fontSize: "var(--font-md)",
+                  color: isAccountpage ? "var(--color-danger)" : "inherit",
+                }}
+              />
             </IconButton>
             <UserMenu
               anchorEl={UserMenuAnchor}

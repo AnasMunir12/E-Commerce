@@ -7,8 +7,18 @@ import {
   RateReview as ReviewsIcon,
   Logout as LogoutIcon
 } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
+
 
 const UserMenu = ({ anchorEl, open, onClose , HandleLogout , user }) => {
+    const menuItems = [
+    { icon: <AccountIcon fontSize="small" />, label: 'Manage My Account', to: '/account' },
+    { icon: <OrdersIcon fontSize="small" />, label: 'My Orders' },
+    { icon: <CancellationsIcon fontSize="small" />, label: 'My Cancellations' },
+    { icon: <ReviewsIcon fontSize="small" />, label: 'My Reviews' },
+    { icon: <LogoutIcon fontSize="small" />, label: 'Logout', action: HandleLogout }
+  ];
+  
   return (
     <Menu
       anchorEl={anchorEl}
@@ -53,41 +63,51 @@ const UserMenu = ({ anchorEl, open, onClose , HandleLogout , user }) => {
       transformOrigin={{ horizontal: 'right', vertical: 'top' }}
       anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
     >
-      {[
-        { icon: <AccountIcon fontSize="small" />, label: 'Manage My Account' },
-        { icon: <OrdersIcon fontSize="small" />, label: 'My Orders' },
-        { icon: <CancellationsIcon fontSize="small" />, label: 'My Cancellations' },
-        { icon: <ReviewsIcon fontSize="small" />, label: 'My Reviews' },
-        { icon: <LogoutIcon fontSize="small" />, label: 'Logout' , action: HandleLogout }
-      ].map(({ icon, label , action}, index) => (
-        <MenuItem
-          key={index}
-          onClick= {() => {
-          onClose();
-          if (action) action();
-        }}
-          sx={{
-            '&:hover': {
-              color: 'rgba(255, 255, 255, 0.62)',
-              '& .MuiSvgIcon-root': {
-                color: 'rgba(255, 255, 255, 0.8)',
+       {menuItems.map(({ icon, label, to, action }, index) => {
+        const menuItemContent = (
+          <>
+            <ListItemIcon sx={{ color: 'inherit' }}>{icon}</ListItemIcon>
+            <Typography variant="inherit" sx={{ color: 'inherit' }}>
+              {label}
+            </Typography>
+          </>
+        );
+
+        return (
+          <MenuItem
+            key={index}
+            onClick={() => {
+              onClose();
+              if (action) action();
+            }}
+            sx={{
+              '&:hover': {
+                color: 'rgba(255, 255, 255, 0.62)',
+                '& .MuiSvgIcon-root': {
+                  color: 'rgba(255, 255, 255, 0.8)',
+                },
               },
-            },
-          }}
-        >
-           {/* {user && (
-        <MenuItem disabled sx={{ opacity: 1, cursor: "default" }}>
-          <Typography variant="body2" sx={{ mx: 1, color: '#fff' }}>
-            Hi, {user.name || user.email}
-          </Typography>
-        </MenuItem>
-      )} */}
-          <ListItemIcon sx={{ color: 'inherit' }}>{icon}</ListItemIcon>
-          <Typography variant="inherit" sx={{ color: 'inherit' }}>
-            {label}
-          </Typography>
-        </MenuItem>
-      ))}
+            }}
+          >
+            {to ? (
+              <Link
+                to={to}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  textDecoration: 'none',
+                  color: 'inherit',
+                  width: '100%',
+                }}
+              >
+                {menuItemContent}
+              </Link>
+            ) : (
+              menuItemContent
+            )}
+          </MenuItem>
+        );
+      })}
     </Menu>
   );
 };

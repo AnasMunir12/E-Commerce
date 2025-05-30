@@ -97,7 +97,6 @@ const ProductDt = () => {
   ];
 
   useEffect(() => {
-    // Simulate API loading
     const timer = setTimeout(() => {
       try {
         const foundProduct = products.find((p) => p.id === id);
