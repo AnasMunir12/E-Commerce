@@ -26,6 +26,8 @@ import Lcd from "../../images/LCD.png";
 import { useDispatch, useSelector } from "react-redux";
 import { addToProduct } from "../Utils/itemSlice";
 
+import { allProductss } from '../Home/productData';
+
 // ⏳ Countdown Timer Component
 const CountdownTimer = ({ endDate }) => {
   const calculateTimeLeft = () => {
@@ -91,6 +93,8 @@ const CountdownTimer = ({ endDate }) => {
 };
 
 export default function FlashSales() {
+
+  const flashSalesProducts = allProductss.filter(product => product.id.startsWith('flash-'));
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -359,7 +363,7 @@ export default function FlashSales() {
         <Box sx={{ width: "100%" }}>
           {/* Flash Sales Slider */}
           <Slider ref={sliderRef} {...settings}>
-            {FlashSalesData.map((Sale, index) => (
+            {flashSalesProducts.map((Sale, index) => (
               <Box key={index}>
                 <Stack>
                   <ProductCard to={`/product/${Sale.id}`} sx={{ mx: "auto" }}>

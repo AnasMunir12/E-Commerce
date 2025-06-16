@@ -15,6 +15,9 @@ import ConfirmOrder from './Pages/ConfirmOrder'
 import SellingProductDT from './Components/Productdetail/SellingProductDT'
 import ExploreDT from './Components/Productdetail/ExploreDT'
 import AccountDetail from './Pages/AccountDetail'
+import SearchResults from './Pages/searchResult'
+import AllProducts from './Components/Home/AllProducts'
+import CategoryProducts from './Components/CategoryProduct/CategoryProducts'
 // import EmailVerification from './Components/Signup/EmailVerfication'
 
 function App() {
@@ -26,8 +29,11 @@ function App() {
        { !HideNavbar &&  <Navbar /> }
       <Routes>
         <Route path='/' element={<Home />} />
+        <Route path='/search' element={<SearchResults/>} />
         <Route path='/product/:id' element={<ProductDt />} />
         <Route path='/selling_product/:id' element={<SellingProductDT />} />
+        <Route path='/category/:category' element={<CategoryProducts />} />
+        <Route path= '/all-products' element={<AllProducts />} />
         <Route path='/explore_product/:id' element={<ExploreDT />} />
         <Route path='/cart' element={<AddtoCart />} />
         <Route path='/checkout' element={<Checkout />} />

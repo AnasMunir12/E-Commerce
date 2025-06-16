@@ -20,6 +20,7 @@ import Slide from '@mui/material/Slide';
 
 
 
+
 const ProductCard = styled(Stack)`
   background: var(--success-bg);
   border-radius: 4px;
@@ -155,7 +156,7 @@ export default function Sellingproduct() {
         </Stack>
         <StyledWrapper   >
       <div className="btn-conteiner">
-        <a className="btn-content" href="#">
+        <a className="btn-content" onClick={() => navigate('/all-products')}>
           <span className="btn-title">View All</span>
           <span className="icon-arrow">
             <svg width="66px" height="43px" viewBox="0 0 66 43" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
@@ -266,7 +267,7 @@ export default function Sellingproduct() {
       <StyledWrapperMobile   >
       <div className="btn-conteiner">
         <a className="btn-content" href="#">
-          <span className="btn-title">View All</span>
+          <span className="btn-title" onClick={() => navigate('/all-products')}>View All</span>
           <span className="icon-arrow">
             <svg width="66px" height="43px" viewBox="0 0 66 43" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
               <g id="arrow" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
@@ -318,6 +319,7 @@ const StyledWrapper = styled.div`
     transition: 1s;
     border-radius: 100px;
     box-shadow: 0 0 0.2em 0 var(--color-background);
+    cursor: pointer;
   }
 
   .btn-content:hover,
@@ -442,6 +444,7 @@ const StyledWrapperMobile = styled.div`
       border-radius: 100px;
       box-shadow: 0 0 0.2em 0 var(--color-danger);
       transition: 0.5s;
+      cursor: pointer;
     }
 
     .btn-content:hover {

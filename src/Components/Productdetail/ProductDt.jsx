@@ -20,6 +20,8 @@ import Lcd from "../../images/LCD.png";
 
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
+import { addToProduct } from "../Utils/itemSlice";
+import { useDispatch } from "react-redux";
 
 const ProductDt = () => {
   const { id } = useParams();
@@ -40,6 +42,8 @@ const ProductDt = () => {
     setCounter(prev => prev - 1);
   };
 };
+
+const dispatch = useDispatch();
 
   // Mock data - in a real app you'd fetch this from an API
   const products = [
@@ -138,6 +142,19 @@ const ProductDt = () => {
   }
 
     
+const HandleBuy = () => {
+  dispatch(
+    addToProduct({
+     id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.img,
+        quantity: counter // Include the current quantity
+    })
+  )
+    navigate('/cart')
+
+}
 
 
 
@@ -250,7 +267,7 @@ const ProductDt = () => {
             </Box>
 
             <Box display={"flex"} flexDirection= {{  xs:"column" , md: "row"}} gap={2} sx={{ mt: 2 }}>
-              <Box display={"flex"} flexDirection={"row"} alignItems={"center"}>
+              {/* <Box display={"flex"} flexDirection={"row"} alignItems={"center"}>
                 <Box sx={{ border: "1px solid #00000080" }}>
                   <IconButton  onClick={HandleDecrease} sx={{ color:"black"}}>
                     <RemoveIcon />
@@ -264,13 +281,14 @@ const ProductDt = () => {
                     <AddIcon />
                   </IconButton>
                 </Box>
-              </Box>
+              </Box> */}
               <Box display={"flex"} flexDirection={"row"} gap={2} >
                <Button
                 variant="contained"
                 color="error"
                 sx={{ px: 4, py: 1.5 }}
                 size="large"
+                onClick={HandleBuy}
               >
                 Buy Now
               </Button>

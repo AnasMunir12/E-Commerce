@@ -26,6 +26,8 @@ import Xremote from "../../images/Explore/X_remote.png";
 import Jacket from "../../images/Explore/jacket.png";
 
 import { DotLoader } from "react-spinners";
+import { addToProduct } from "../Utils/itemSlice";
+import { useDispatch } from "react-redux";
 
 
 export default function SellingProductDT() {
@@ -47,6 +49,8 @@ export default function SellingProductDT() {
         setCounter(prev => prev - 1);
       };
     };
+
+    const dispatch = useDispatch();
 
     const exploreProduct = [
        {
@@ -213,6 +217,18 @@ id: "explore_8",
         );
       }
 
+      const HandleBuyExplore = () => {
+        dispatch(
+          addToProduct({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.img,
+          })
+        )
+        navigate('/cart')
+      }
+
 
   return (
     <Box sx={{ p: 4 }}>
@@ -342,6 +358,7 @@ id: "explore_8",
                 color="error"
                 sx={{ px: 4, py: 1.5 }}
                 size="large"
+                onClick={HandleBuyExplore}
               >
                 Buy Now
               </Button>

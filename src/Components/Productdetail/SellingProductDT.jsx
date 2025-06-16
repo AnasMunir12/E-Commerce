@@ -22,9 +22,12 @@ import Cpu from "../../images/rgbcpu.png";
 import Shelf from "../../images/bookshelf.png";
 
 import { DotLoader } from "react-spinners";
+import { addToProduct } from "../Utils/itemSlice";
+import { useDispatch } from "react-redux";
 
 export default function SellingProductDT() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -148,6 +151,18 @@ id:"sell-1",
         </Button>
       </Box>
     );
+  }
+
+  const HandleBuySell = () => {
+    dispatch(
+      addToProduct({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.img
+      })
+    )
+    navigate('/cart')
   }
 
   return (
@@ -285,6 +300,7 @@ id:"sell-1",
                   color="error"
                   sx={{ px: 4, py: 1.5 }}
                   size="large"
+                  onClick={HandleBuySell}
                 >
                   Buy Now
                 </Button>
