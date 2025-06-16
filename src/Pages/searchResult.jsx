@@ -2,8 +2,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Box, Typography, Grid } from '@mui/material';
-import ProductCard from '../components/ProductCard';
-
+import ProductCard from '../Components/ProductCard'
 const SearchResults = () => {
   const location = useLocation();
   const results = location.state?.results || [];
