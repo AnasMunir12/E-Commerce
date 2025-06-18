@@ -14,8 +14,8 @@ import styled from 'styled-components';
 
 
 import Iphonerimg from "../../images/Bannerimg.png";
-import Samsungimg from "../../images/samsungbanner.jpg";
-import Oneplusimg from "../../images/oneplusbanner.jpg";
+import Samsungimg from "../../images/samsungbanner.png";
+import Oneplusimg from "../../images/oneplusbanner.png";
 import AppleIcon from "@mui/icons-material/Apple";
 import AndroidIcon from "@mui/icons-material/Android";
 import SmartphoneIcon from "@mui/icons-material/Smartphone";
@@ -114,15 +114,15 @@ export default function Banner() {
                     sx={{
                       width: {
                         xs: "100%",
-                        md: "80%",
+                        md: "100%",
                         lg: "100%",
                       },
                       height: {
                         xs: "100%",
-                        md: "80%",
+                        md: "100%",
                         lg: "100%",
                       },
-                      objectFit: "cover",
+                      // objectFit: "cover",
                     }}
                   />
                 </Grid>
