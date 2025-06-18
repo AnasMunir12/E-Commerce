@@ -293,7 +293,7 @@ const handleClose = () => {
   <Box
               sx={{
                 mx:"auto",
-                height: { xs: "350px", sm: "450px", md: "550px" },
+                height: { xs: "350px", sm: "450px", md: "450px" },
                 width: { xs: "350px", sm: "450px", md: "550px" },
               }}
             >

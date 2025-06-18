@@ -202,7 +202,7 @@ export default function Login() {
           <Box
             sx={{
               mx:"auto",
-              height: { xs: "300px", sm: "450px", md: "550px" },
+              height: { xs: "300px", sm: "450px", md: "450px" },
               width: { xs: "300px", sm: "450px", md: "550px" },
             }}
           >

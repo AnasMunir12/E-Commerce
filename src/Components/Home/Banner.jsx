@@ -79,7 +79,6 @@ export default function Banner() {
                     sx={{
                       fontSize: "var(--font-xl)",
                       textAlign: "left",
-                      textAlign: "left",
                     }}
                   >
                     Up to 10% <br /> off Voucher
