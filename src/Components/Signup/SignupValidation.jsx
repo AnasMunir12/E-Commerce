@@ -75,7 +75,7 @@ const validateEmail = (email) => /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.
     }
 
 try {
-  const response = await axios.post("http://localhost:5000/api/user/signup", {
+  const response = await axios.post("https://e-commerce-backend-production-79ea.up.railway.app/api/user/signup", {
     name,
     email,
     password,
