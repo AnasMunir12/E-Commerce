@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Grid, Typography, Rating, Button, IconButton } from "@mui/material";
 import { allProductss } from '../Home/productData';

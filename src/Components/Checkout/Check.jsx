@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Snackbar, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,14 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import Checkbox from "@mui/material/Checkbox";
 import Radio from "@mui/material/Radio";
 
-import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
 import styled from "styled-components";
 
-import Remote from "../../images/xremote.png";
-import Keyboard from "../../images/keyboard.png";
-import Lcd from "../../images/LCD.png";
+
 
 import PayPal from "../../images/paypal.png";
 import MasterCard from "../../images/MasterCard.png";
@@ -86,7 +83,7 @@ export default function Check() {
     });
   };
 
-  const HandleSubmit = (e) => {
+  const HandleSubmit = async (e) => {
     e.preventDefault();
 
     // Phone number validation (at least 10 digits)
@@ -112,6 +109,38 @@ export default function Check() {
       return;
     }
 
+    const orderID = `ORD-${Date.now()}`;
+
+  try {
+    // Send order confirmation email via backend
+    const emailResponse = await fetch('http://localhost:5000/api/user/send-order-confirmation', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userEmail: formData.emailAddress,
+        userName: formData.fullName,
+        orderId: orderID,
+        orderItems: cartItems.map(item => ({
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price
+        })),
+        orderTotal: cartItems.reduce(
+          (total, item) => total + item.price * item.quantity, 
+          0
+        ).toFixed(2),
+        sellerEmail: "anassheik890@gmail.com"
+      })
+    });
+
+   if (!emailResponse.ok) {
+  const errorData = await emailResponse.json();
+  throw new Error(errorData.error || 'Email sending failed');
+}
+
+
     dispatch(
       placeOrder({
         ...formData,
@@ -125,10 +154,28 @@ export default function Check() {
       })
     );
 
-    // Navigate
-    navigate("/OrderConfirmation");
-  };
-
+ showSnackbar(`Order placed! Confirmation sent to ${formData.emailAddress}`, "success");
+    setTimeout(() => navigate("/OrderConfirmation"), 2000);
+ } catch (error) {
+    console.error("Order processing error:", error);
+    showSnackbar("Order placed but email confirmation failed", "warning");
+    
+    // Still proceed with order
+    dispatch(placeOrder({
+      ...formData,
+      userID: currentUser?.email || "guest",
+      paymentMethod: selectedValue === "a" ? "bank" : "cash",
+      items: cartItems,
+      orderID,
+      total: cartItems.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+      ),
+    }));
+    
+    setTimeout(() => navigate("/OrderConfirmation"), 2000);
+  }
+};
   if (cartItems.length === 0) {
     return (
       <Box
@@ -144,6 +191,20 @@ export default function Check() {
 
   return (
     <>
+    <Snackbar
+    open={snackbar.open}
+    autoHideDuration={6000}
+    onClose={() => setSnackbar({...snackbar, open: false})}
+    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+  >
+    <Alert 
+      onClose={() => setSnackbar({...snackbar, open: false})} 
+      severity={snackbar.severity}
+      sx={{ width: '100%' }}
+    >
+      {snackbar.message}
+    </Alert>
+  </Snackbar>
       {/* Links  */}
       <Box display="flex" alignItems="center" gap={1.5} mt={8} px={6}>
         <Typography
@@ -161,7 +222,7 @@ export default function Check() {
         <Typography>/</Typography>
         <Typography
           component={Link}
-          to="/"
+          to="/account"
           sx={{
             fontSize: "var(--font-sm)",
             opacity: 0.5,
@@ -388,7 +449,7 @@ export default function Check() {
           {cartItems.map((prd, index) => (
             // {/* product 1 */}
             <Box
-              key={index}
+              key={prd.id}
               display={"flex"}
               alignItems={"center"}
               justifyContent={"space-between"}

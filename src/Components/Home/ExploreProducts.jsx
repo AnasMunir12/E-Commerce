@@ -287,8 +287,8 @@ export default function ExploreProducts() {
 
 
 const AnimatedGridWrapper = styled.div`
-  transition: opacity 0.6s ease-in-out, transform 0.4s ease;
-  opacity: ${({ show }) => (show ? 1 : 0.7)};
+  transition: transform 0.4s ease; // Removed opacity from transition
+  opacity: 1; // Fixed opacity at 1
   transform: ${({ show }) => (show ? "scale(1)" : "scale(0.98)")};
 `;
 
