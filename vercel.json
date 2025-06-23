@@ -5,7 +5,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.app *.up.railway.app; style-src 'self' 'unsafe-inline' *.vercel.app; font-src 'self' data: *.vercel.app; img-src 'self' data: *.vercel.app *.up.railway.app upload.wikimedia.org developer.apple.com; connect-src 'self' *.vercel.app *.up.railway.app;"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.app *.up.railway.app; style-src 'self' 'unsafe-inline' *.vercel.app; font-src 'self' data: *.vercel.app; img-src 'self' data: *.vercel.app *.up.railway.app upload.wikimedia.org developer.apple.com; connect-src 'self' *.vercel.app *.up.railway.app https://e-commerce-backend-production-79ea.up.railway.app;"
         }
       ]
     }
